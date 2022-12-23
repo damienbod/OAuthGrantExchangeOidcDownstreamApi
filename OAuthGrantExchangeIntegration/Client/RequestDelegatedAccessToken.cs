@@ -18,13 +18,12 @@ public static class RequestDelegatedAccessToken
         {
             
             new KeyValuePair<string, string>("grant_type", OAuthGrantExchangeConsts.GRANT_TYPE),
-            new KeyValuePair<string, string>("client_id", reqData.ClientId),
+            new KeyValuePair<string, string>("audience", reqData.Audience),
             new KeyValuePair<string, string>("subject_token_type", OAuthGrantExchangeConsts.TOKEN_TYPE_ACCESS_TOKEN),
             new KeyValuePair<string, string>("subject_token", reqData.AccessToken),
             new KeyValuePair<string, string>("scope", reqData.Scope)
 
             // new KeyValuePair<string, string>("resource", "--optional--")
-            // new KeyValuePair<string, string>("audience", "--optional--")
             // new KeyValuePair<string, string>("requested_token_type", "--optional--")
             // new KeyValuePair<string, string>("actor_token", "--optional--")
             // new KeyValuePair<string, string>("actor_token_type", "--optional--")

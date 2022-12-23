@@ -72,7 +72,7 @@ public class ApiTokenCacheClient
                 Scope = scope,
                 AccessToken = aadAccessToken,
                 ClientSecret = clientSecret,
-                ClientId = clientId,
+                Audience = clientId,
                 EndpointUrl = "/connect/obotoken",
                 OboHttpClient = oboHttpClient
             }, _logger);

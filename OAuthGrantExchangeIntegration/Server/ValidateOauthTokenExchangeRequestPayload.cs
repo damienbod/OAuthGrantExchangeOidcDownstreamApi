@@ -19,7 +19,7 @@ public static class ValidateOauthTokenExchangeRequestPayload
             return (false, $"subject_token_type parameter has an incorrect value, expected {OAuthGrantExchangeConsts.TOKEN_TYPE_ACCESS_TOKEN}");
         };
 
-        if (!oauthTokenExchangePayload.client_id.Equals(oauthTokenExchangeConfiguration.ClientId))
+        if (!oauthTokenExchangePayload.audience.Equals(oauthTokenExchangeConfiguration.Audience))
         {
             return (false, "obo client_id parameter has an incorrect value");
         };

@@ -13,8 +13,8 @@ public class OauthTokenExchangeConfiguration
     public string AccessTokenAudience { get; set; } = string.Empty;
 
     // request parameters
-    [JsonPropertyName("ClientId")]
-    public string ClientId { get; set; } = string.Empty;
+    [JsonPropertyName("Audience")]
+    public string Audience { get; set; } = string.Empty;
     [JsonPropertyName("ClientSecret")]
     public string ClientSecret { get; set; } = string.Empty;
     [JsonPropertyName("ScopeForNewAccessToken")]
@@ -23,5 +23,6 @@ public class OauthTokenExchangeConfiguration
     // new token claims
     [JsonPropertyName("AudienceForNewAccessToken")]
     public string AudienceForNewAccessToken { get; set; } = string.Empty;
+
     public string IssuerForNewAccessToken { get; set; }
 }

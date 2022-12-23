@@ -3,10 +3,16 @@
 public class GetDelegatedApiTokenOboModel
 {
     public HttpClient? GrantExchangeHttpClient { get; set; }
-    public string ClientId { get; set; } = string.Empty;
+
+    /// <summary>
+    /// This is the client_id in Azure
+    /// </summary>
+    public string Audience { get; set; } = string.Empty;
     public string Scope { get; set; } = string.Empty;
 
-    // Add to header Authorization Basic
+    /// <summary>
+    /// Add to header Authorization Basic
+    /// </summary>
     public string ClientSecret { get; set; } = string.Empty;
     public string EndpointUrl { get; set; } = string.Empty;
     public string AccessToken { get; set; } = string.Empty;
