@@ -8,21 +8,21 @@ public static class RequestDelegatedAccessToken
     public static async Task<OauthTokenExchangeSuccessResponse?> GetDelegatedApiTokenObo(
         GetDelegatedApiTokenOboModel reqData, ILogger logger)
     {
-        if (reqData.OboHttpClient == null)
+        if (reqData.GrantExchangeHttpClient == null)
             throw new ArgumentException("Httpclient missing, is null");
 
         // Content-Type: application/x-www-form-urlencoded
         var oboTokenExchangeBody = new[]
         {
-            new KeyValuePair<string, string>("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer"),
+            new KeyValuePair<string, string>("grant_type", "urn:ietf:params:oauth:grant-type:token-exchange"),
             new KeyValuePair<string, string>("client_id", reqData.ClientId),
-            new KeyValuePair<string, string>("client_secret", OauthTokenExchangeExtentions.ToSha256(reqData.ClientSecret)),
-            new KeyValuePair<string, string>("assertion", reqData.AccessToken),
-            new KeyValuePair<string, string>("scope", reqData.Scope),
-            new KeyValuePair<string, string>("requested_token_use", "on_behalf_of"),
+            new KeyValuePair<string, string>("subject_token_type", OauthTokenExchangeExtentions.ToSha256(reqData.ClientSecret)),
+            new KeyValuePair<string, string>("subject_token", reqData.AccessToken),
+            new KeyValuePair<string, string>("scope", reqData.Scope)
         };
 
-        var response = await reqData.OboHttpClient.PostAsync(reqData.EndpointUrl, new FormUrlEncodedContent(oboTokenExchangeBody));
+        var response = await reqData.GrantExchangeHttpClient.PostAsync(reqData.EndpointUrl, 
+            new FormUrlEncodedContent(oboTokenExchangeBody));
 
         if (response.IsSuccessStatusCode)
         {
