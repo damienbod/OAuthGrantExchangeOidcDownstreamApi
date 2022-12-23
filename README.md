@@ -2,6 +2,8 @@
 
 [![.NET](https://github.com/damienbod/OAuthGrantExchangeOidcDownstreamApi/actions/workflows/dotnet.yml/badge.svg)](https://github.com/damienbod/OAuthGrantExchangeOidcDownstreamApi/actions/workflows/dotnet.yml)
 
+OAuth 2.0 Token Exchange delegated implementation with Azure AD and OpenIddict
+
 ## Links
 
 https://documentation.openiddict.com/configuration/application-permissions.html

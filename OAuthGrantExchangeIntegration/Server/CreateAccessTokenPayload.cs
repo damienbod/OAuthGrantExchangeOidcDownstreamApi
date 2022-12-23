@@ -26,9 +26,9 @@ public static class CreateDelegatedAccessTokenPayload
 
         if(payload.ClaimsPrincipal != null)
         {
-            var name = ValidateOboRequestPayload.GetPreferredUserName(payload.ClaimsPrincipal);
-            var azp = ValidateOboRequestPayload.GetAzp(payload.ClaimsPrincipal);
-            var azpacr = ValidateOboRequestPayload.GetAzpacr(payload.ClaimsPrincipal);
+            var name = ValidateOauthTokenExchangeRequestPayload.GetPreferredUserName(payload.ClaimsPrincipal);
+            var azp = ValidateOauthTokenExchangeRequestPayload.GetAzp(payload.ClaimsPrincipal);
+            var azpacr = ValidateOauthTokenExchangeRequestPayload.GetAzpacr(payload.ClaimsPrincipal);
 
             if(!string.IsNullOrEmpty(name))
                 subject.AddClaim(new Claim("name", name));

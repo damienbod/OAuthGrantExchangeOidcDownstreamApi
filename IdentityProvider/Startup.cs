@@ -28,7 +28,7 @@ public class Startup
         services.AddControllersWithViews();
         services.AddRazorPages();
 
-        services.Configure<OboConfiguration>(Configuration.GetSection("OboConfiguration"));
+        services.Configure<OauthTokenExchangeConfiguration>(Configuration.GetSection("OboConfiguration"));
 
         services.AddDbContext<ApplicationDbContext>(options =>
         {

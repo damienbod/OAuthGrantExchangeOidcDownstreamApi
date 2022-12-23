@@ -17,55 +17,55 @@ public class AuthorizationOboController : Controller
 {
     private readonly IWebHostEnvironment _environment;
     private readonly IConfiguration _configuration;
-    private readonly OboConfiguration _oboConfiguration;
+    private readonly OauthTokenExchangeConfiguration _oauthTokenExchangeConfigurationConfiguration;
     private readonly ILogger<AuthorizationOboController> _logger;
     private readonly UserManager<ApplicationUser> _userManager;
 
     public AuthorizationOboController(IConfiguration configuration, 
-        IWebHostEnvironment env, IOptions<OboConfiguration> oboConfiguration,
+        IWebHostEnvironment env, IOptions<OauthTokenExchangeConfiguration> oauthTokenExchangeConfigurationConfiguration,
         UserManager<ApplicationUser> userManager,
         ILoggerFactory loggerFactory)
     {
         _configuration = configuration;
         _environment = env;
-        _oboConfiguration = oboConfiguration.Value;
+        _oauthTokenExchangeConfigurationConfiguration = oauthTokenExchangeConfigurationConfiguration.Value;
         _userManager= userManager;
         _logger = loggerFactory.CreateLogger<AuthorizationOboController>();
     }
 
     [AllowAnonymous]
-    [HttpPost("~/connect/obotoken"), Produces("application/json")]
-    public async Task<IActionResult> Exchange([FromForm] OboPayload oboPayload)
+    [HttpPost("~/connect/oauthTokenExchangetoken"), Produces("application/json")]
+    public async Task<IActionResult> Exchange([FromForm] OauthTokenExchangePayload oauthTokenExchangePayload)
     {
-        var (Valid, Reason) = ValidateOboRequestPayload.IsValid(oboPayload, _oboConfiguration);
+        var (Valid, Reason) = ValidateOauthTokenExchangeRequestPayload.IsValid(oauthTokenExchangePayload, _oauthTokenExchangeConfigurationConfiguration);
 
         if(!Valid)
         {
-            return UnauthorizedValidationParametersFailed(oboPayload, Reason);
+            return UnauthorizedValidationParametersFailed(oauthTokenExchangePayload, Reason);
         }
 
         // get well known endpoints and validate access token sent in the assertion
         var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
-            _oboConfiguration.AccessTokenMetadataAddress, 
+            _oauthTokenExchangeConfigurationConfiguration.AccessTokenMetadataAddress, 
             new OpenIdConnectConfigurationRetriever());
 
         var wellKnownEndpoints =  await configurationManager.GetConfigurationAsync();
 
-        var accessTokenValidationResult = ValidateOboRequestPayload.ValidateTokenAndSignature(
-            oboPayload.assertion,
-            _oboConfiguration,
+        var accessTokenValidationResult = ValidateOauthTokenExchangeRequestPayload.ValidateTokenAndSignature(
+            oauthTokenExchangePayload.assertion,
+            _oauthTokenExchangeConfigurationConfiguration,
             wellKnownEndpoints.SigningKeys);
         
         if(!accessTokenValidationResult.Valid)
         {
-            return UnauthorizedValidationTokenAndSignatureFailed(oboPayload, accessTokenValidationResult);
+            return UnauthorizedValidationTokenAndSignatureFailed(oauthTokenExchangePayload, accessTokenValidationResult);
         }
 
         // get claims from aad token and re use in OpenIddict token
         var claimsPrincipal = accessTokenValidationResult.ClaimsPrincipal;
 
-        var name = ValidateOboRequestPayload.GetPreferredUserName(claimsPrincipal);
-        var isNameAnEmail = ValidateOboRequestPayload.IsEmailValid(name);
+        var name = ValidateOauthTokenExchangeRequestPayload.GetPreferredUserName(claimsPrincipal);
+        var isNameAnEmail = ValidateOauthTokenExchangeRequestPayload.IsEmailValid(name);
         if(!isNameAnEmail)
         {
             return UnauthorizedValidationPrefferedUserNameFailed();
@@ -86,10 +86,10 @@ public class AuthorizationOboController : Controller
             Sub = Guid.NewGuid().ToString(),
             ClaimsPrincipal = claimsPrincipal,
             SigningCredentials = ActiveCertificate,
-            Scope = _oboConfiguration.ScopeForNewAccessToken,
-            Audience = _oboConfiguration.AudienceForNewAccessToken,
-            Issuer = _oboConfiguration.IssuerForNewAccessToken,
-            OriginalClientId = _oboConfiguration.AccessTokenAudience
+            Scope = _oauthTokenExchangeConfigurationConfiguration.ScopeForNewAccessToken,
+            Audience = _oauthTokenExchangeConfigurationConfiguration.AudienceForNewAccessToken,
+            Issuer = _oauthTokenExchangeConfigurationConfiguration.IssuerForNewAccessToken,
+            OriginalClientId = _oauthTokenExchangeConfigurationConfiguration.AccessTokenAudience
         };
 
         var accessToken = CreateDelegatedAccessTokenPayload.GenerateJwtTokenAsync(tokenData);
@@ -99,20 +99,20 @@ public class AuthorizationOboController : Controller
         if(IdentityModelEventSource.ShowPII)
         {
             _logger.LogDebug("OBO new access token returned for sub {sub} for user {Username}", tokenData.Sub,
-                ValidateOboRequestPayload.GetPreferredUserName(claimsPrincipal));
+                ValidateOauthTokenExchangeRequestPayload.GetPreferredUserName(claimsPrincipal));
         }
 
-        return Ok(new OboSuccessResponse
+        return Ok(new OauthTokenExchangeSuccessResponse
         {
-            ExpiresIn = 60 * 60,
-            AccessToken = accessToken,
-            Scope = oboPayload.scope
+            expires_in = 60 * 60,
+            access_token = accessToken,
+            scope = oauthTokenExchangePayload.scope
         });
     }
 
     private IActionResult UnauthorizedValidationNoUserExistsFailed()
     {
-        var errorResult = new OboErrorResponse
+        var errorResult = new OauthTokenExchangeErrorResponse
         {
             error = "assertion has incorrect claims",
             error_description = "user does not exist",
@@ -132,7 +132,7 @@ public class AuthorizationOboController : Controller
 
     private IActionResult UnauthorizedValidationPrefferedUserNameFailed()
     {
-        var errorResult = new OboErrorResponse
+        var errorResult = new OauthTokenExchangeErrorResponse
         {
             error = "assertion has incorrect claims",
             error_description = "incorrect email used in preferred user name",
@@ -150,9 +150,9 @@ public class AuthorizationOboController : Controller
         return Unauthorized(errorResult);
     }
 
-    private IActionResult UnauthorizedValidationTokenAndSignatureFailed(OboPayload oboPayload, (bool Valid, string Reason, ClaimsPrincipal ClaimsPrincipal) accessTokenValidationResult)
+    private IActionResult UnauthorizedValidationTokenAndSignatureFailed(OauthTokenExchangePayload oauthTokenExchangePayload, (bool Valid, string Reason, ClaimsPrincipal ClaimsPrincipal) accessTokenValidationResult)
     {
-        var errorResult = new OboErrorResponse
+        var errorResult = new OauthTokenExchangeErrorResponse
         {
             error = "Validation request parameters failed",
             error_description = accessTokenValidationResult.Reason,
@@ -163,7 +163,7 @@ public class AuthorizationOboController : Controller
 
         if (IdentityModelEventSource.ShowPII)
         {
-            _logger.LogDebug("OBO new access token returned for assertion {assertion}", oboPayload.assertion);
+            _logger.LogDebug("OBO new access token returned for assertion {assertion}", oauthTokenExchangePayload.assertion);
         }
 
         _logger.LogInformation("{error} {error_description} {correlation_id} {trace_id}",
@@ -175,9 +175,9 @@ public class AuthorizationOboController : Controller
         return Unauthorized(errorResult);
     }
 
-    private IActionResult UnauthorizedValidationParametersFailed(OboPayload oboPayload, string Reason)
+    private IActionResult UnauthorizedValidationParametersFailed(OauthTokenExchangePayload oauthTokenExchangePayload, string Reason)
     {
-        var errorResult = new OboErrorResponse
+        var errorResult = new OauthTokenExchangeErrorResponse
         {
             error = "Validation request parameters failed",
             error_description = Reason,
@@ -194,7 +194,7 @@ public class AuthorizationOboController : Controller
 
         if (IdentityModelEventSource.ShowPII)
         {
-            _logger.LogDebug("OBO new access token returned for assertion {assertion}", oboPayload.assertion);
+            _logger.LogDebug("OBO new access token returned for assertion {assertion}", oauthTokenExchangePayload.assertion);
         }
 
         return Unauthorized(errorResult);

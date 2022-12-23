@@ -3,7 +3,7 @@ using System.Text;
 
 namespace OAuthGrantExchangeIntegration;
 
-public static class OboExtentions
+public static class OauthTokenExchangeExtentions
 {
     public static string ToSha256(string text)
     {

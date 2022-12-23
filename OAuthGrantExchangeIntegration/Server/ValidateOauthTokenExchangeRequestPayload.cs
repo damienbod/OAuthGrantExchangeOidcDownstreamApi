@@ -5,31 +5,31 @@ using System.Security.Claims;
 
 namespace OAuthGrantExchangeIntegration.Server;
 
-public static class ValidateOboRequestPayload
+public static class ValidateOauthTokenExchangeRequestPayload
 {
-    public static (bool Valid, string Reason) IsValid(OboPayload oboPayload, OboConfiguration oboConfiguration)
+    public static (bool Valid, string Reason) IsValid(OauthTokenExchangePayload oauthTokenExchangePayload, OauthTokenExchangeConfiguration oboConfiguration)
     {
-        if(!oboPayload.requested_token_use.ToLower().Equals("on_behalf_of"))
+        if(!oauthTokenExchangePayload.requested_token_use.ToLower().Equals("on_behalf_of"))
         {
             return (false, "obo requested_token_use parameter has an incorrect value, expected on_behalf_of");
         };
 
-        if (!oboPayload.grant_type.ToLower().Equals("urn:ietf:params:oauth:grant-type:jwt-bearer"))
+        if (!oauthTokenExchangePayload.grant_type.ToLower().Equals("urn:ietf:params:oauth:grant-type:jwt-bearer"))
         {
             return (false, "obo grant_type parameter has an incorrect value, expected urn:ietf:params:oauth:grant-type:jwt-bearer");
         };
 
-        if (!oboPayload.client_id.Equals(oboConfiguration.ClientId))
+        if (!oauthTokenExchangePayload.client_id.Equals(oboConfiguration.ClientId))
         {
             return (false, "obo client_id parameter has an incorrect value");
         };
 
-        if (!oboPayload.client_secret.Equals(OboExtentions.ToSha256(oboConfiguration.ClientSecret)))
+        if (!oauthTokenExchangePayload.client_secret.Equals(OauthTokenExchangeExtentions.ToSha256(oboConfiguration.ClientSecret)))
         {
             return (false, "obo client secret parameter has an incorrect value");
         };
 
-        if (!oboPayload.scope.ToLower().Equals(oboConfiguration.ScopeForNewAccessToken.ToLower()))
+        if (!oauthTokenExchangePayload.scope.ToLower().Equals(oboConfiguration.ScopeForNewAccessToken.ToLower()))
         {
             return (false, "obo scope parameter has an incorrect value");
         };
@@ -39,7 +39,7 @@ public static class ValidateOboRequestPayload
 
     public static (bool Valid, string Reason, ClaimsPrincipal? ClaimsPrincipal) ValidateTokenAndSignature(
         string jwtToken, 
-        OboConfiguration oboConfiguration, 
+        OauthTokenExchangeConfiguration oboConfiguration, 
         ICollection<SecurityKey> signingKeys)
     {
         try

@@ -2,7 +2,7 @@
 
 namespace OAuthGrantExchangeIntegration.Server;
 
-public class OboConfiguration
+public class OauthTokenExchangeConfiguration
 {
     // assertion parameter token validation
     [JsonPropertyName("AccessTokenMetadataAddress")]
