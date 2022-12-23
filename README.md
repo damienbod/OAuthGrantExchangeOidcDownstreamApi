@@ -1,4 +1,4 @@
-# OAuth Grant Exchange OIDC Downstream API
+# OAuth 2.0 Token Exchange OIDC Downstream API
 
 [![.NET](https://github.com/damienbod/OAuthGrantExchangeOidcDownstreamApi/actions/workflows/dotnet.yml/badge.svg)](https://github.com/damienbod/OAuthGrantExchangeOidcDownstreamApi/actions/workflows/dotnet.yml)
 
