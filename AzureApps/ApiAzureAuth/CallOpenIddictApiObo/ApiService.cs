@@ -28,8 +28,9 @@ public class ApiService
 
             client.BaseAddress = new Uri(_downstreamApi.Value.ApiBaseAddress);
 
-            var access_token = await _apiTokenClient.GetApiTokenObo(
-                _downstreamApi.Value.ClientId,
+            var access_token = await _apiTokenClient.GetApiTokenOauthGrantTokenExchange
+            (
+                _downstreamApi.Value.Audience,
                 _downstreamApi.Value.ScopeForAccessToken,
                 _downstreamApi.Value.ClientSecret,
                 aadAccessToken

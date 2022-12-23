@@ -34,7 +34,7 @@ public class ApiTokenCacheClient
         _cache = cache;
     }
 
-    public async Task<string> GetApiTokenObo(string clientId, 
+    public async Task<string> GetApiTokenOauthGrantTokenExchange(string clientId, 
         string scope, string clientSecret, string aadAccessToken)
     {
         var accessToken = GetFromCache(clientId);
@@ -54,19 +54,19 @@ public class ApiTokenCacheClient
         _logger.LogDebug("GetApiToken new from STS for {api_name}", clientId);
 
         // add
-        var newAccessToken = await GetApiTokenOboAad( clientId,  scope,  clientSecret, aadAccessToken);
+        var newAccessToken = await GetApiTokenOauthGrantTokenExchangeAad( clientId,  scope,  clientSecret, aadAccessToken);
         AddToCache(clientId, newAccessToken);
 
         return newAccessToken.AccessToken;
     }
 
-    private async Task<AccessTokenItem> GetApiTokenOboAad(string clientId,
+    private async Task<AccessTokenItem> GetApiTokenOauthGrantTokenExchangeAad(string clientId,
         string scope, string clientSecret, string aadAccessToken)
     {
         var oboHttpClient = _httpClientFactory.CreateClient();
         oboHttpClient.BaseAddress = new Uri(_downstreamApiConfigurations.Value.IdentityProviderUrl);
 
-        var oboSuccessResponse = await RequestDelegatedAccessToken.GetDelegatedApiTokenObo(
+        var tokenExchangeSuccessResponse = await RequestDelegatedAccessToken.GetDelegatedApiTokenTokenExchange(
             new GetDelegatedApiTokenOboModel
             {
                 Scope = scope,
@@ -77,17 +77,17 @@ public class ApiTokenCacheClient
                 GrantExchangeHttpClient = oboHttpClient
             }, _logger);
 
-        if (oboSuccessResponse != null)
+        if (tokenExchangeSuccessResponse != null)
         {
             return new AccessTokenItem
             {
-                ExpiresIn = DateTime.UtcNow.AddSeconds(oboSuccessResponse.expires_in),
-                AccessToken = oboSuccessResponse.access_token
+                ExpiresIn = DateTime.UtcNow.AddSeconds(tokenExchangeSuccessResponse.expires_in),
+                AccessToken = tokenExchangeSuccessResponse.access_token
             };
         }
 
-        _logger.LogError("no success response from OBO access token request");
-        throw new ApplicationException("no success response from OBO access token request");
+        _logger.LogError("no success response from oauth token exchange access token request");
+        throw new ApplicationException("no success response from oauth token exchange access token request");
     }
 
     private void AddToCache(string key, AccessTokenItem accessTokenItem)

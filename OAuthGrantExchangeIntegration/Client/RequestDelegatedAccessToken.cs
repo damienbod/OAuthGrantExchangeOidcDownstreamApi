@@ -5,7 +5,7 @@ namespace OAuthGrantExchangeIntegration.Client;
 
 public static class RequestDelegatedAccessToken
 {
-    public static async Task<OauthTokenExchangeSuccessResponse?> GetDelegatedApiTokenObo(
+    public static async Task<OauthTokenExchangeSuccessResponse?> GetDelegatedApiTokenTokenExchange(
         GetDelegatedApiTokenOboModel reqData, ILogger logger)
     {
         if (reqData.GrantExchangeHttpClient == null)
