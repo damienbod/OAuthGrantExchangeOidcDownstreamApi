@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 
@@ -12,8 +13,15 @@ public static class RequestDelegatedAccessToken
         if (reqData.GrantExchangeHttpClient == null)
             throw new ArgumentException("Httpclient missing, is null");
 
+        var builder = new StringBuilder()
+                            .Append(EscapeDataString(reqData.ClientId))
+                            .Append(':')
+                            .Append(EscapeDataString(OauthTokenExchangeExtentions.ToSha256(reqData.ClientSecret)));
+
+        var credentials = Convert.ToBase64String(Encoding.ASCII.GetBytes(builder.ToString()));
+
         reqData.GrantExchangeHttpClient.DefaultRequestHeaders.Authorization = 
-            new AuthenticationHeaderValue("Basic", OauthTokenExchangeExtentions.ToSha256(reqData.ClientSecret));
+            new AuthenticationHeaderValue("Basic", credentials);
 
         // Content-Type: application/x-www-form-urlencoded
         var oauthTokenExchangeBody = new[]
@@ -65,5 +73,15 @@ public static class RequestDelegatedAccessToken
         }
 
         return null;
+    }
+
+    static string EscapeDataString(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            return null;
+        }
+
+        return Uri.EscapeDataString(value).Replace("%20", "+");
     }
 }

@@ -34,7 +34,7 @@ public class ApiTokenCacheClient
         _cache = cache;
     }
 
-    public async Task<string> GetApiTokenOauthGrantTokenExchange(string clientId, 
+    public async Task<string> GetApiTokenOauthGrantTokenExchange(string clientId, string audience,
         string scope, string clientSecret, string aadAccessToken)
     {
         var accessToken = GetFromCache(clientId);
@@ -54,13 +54,13 @@ public class ApiTokenCacheClient
         _logger.LogDebug("GetApiToken new from STS for {api_name}", clientId);
 
         // add
-        var newAccessToken = await GetApiTokenOauthGrantTokenExchangeAad( clientId,  scope,  clientSecret, aadAccessToken);
+        var newAccessToken = await GetApiTokenOauthGrantTokenExchangeAad( clientId, audience,  scope,  clientSecret, aadAccessToken);
         AddToCache(clientId, newAccessToken);
 
         return newAccessToken.AccessToken;
     }
 
-    private async Task<AccessTokenItem> GetApiTokenOauthGrantTokenExchangeAad(string clientId,
+    private async Task<AccessTokenItem> GetApiTokenOauthGrantTokenExchangeAad(string clientId, string audience,
         string scope, string clientSecret, string aadAccessToken)
     {
         var tokenExchangeHttpClient = _httpClientFactory.CreateClient();
@@ -72,7 +72,8 @@ public class ApiTokenCacheClient
                 Scope = scope,
                 AccessToken = aadAccessToken,
                 ClientSecret = clientSecret,
-                Audience = clientId,
+                Audience = audience,
+                ClientId = clientId,
                 EndpointUrl = "/connect/oauthTokenExchangetoken",
                 GrantExchangeHttpClient = tokenExchangeHttpClient
             }, _logger);

@@ -17,6 +17,8 @@ public class OauthTokenExchangeConfiguration
     public string Audience { get; set; } = string.Empty;
     [JsonPropertyName("ClientSecret")]
     public string ClientSecret { get; set; } = string.Empty;
+    [JsonPropertyName("ClientId")]
+    public string ClientId { get; set; } = string.Empty;
     [JsonPropertyName("ScopeForNewAccessToken")]
     public string ScopeForNewAccessToken { get; set; } = string.Empty;
 

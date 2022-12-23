@@ -30,6 +30,7 @@ public class ApiService
 
             var access_token = await _apiTokenClient.GetApiTokenOauthGrantTokenExchange
             (
+                _downstreamApi.Value.ClientId,
                 _downstreamApi.Value.Audience,
                 _downstreamApi.Value.ScopeForAccessToken,
                 _downstreamApi.Value.ClientSecret,

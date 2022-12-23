@@ -14,6 +14,8 @@ public class GetDelegatedApiTokenOAuthTokenExchangeModel
     /// Add to header Authorization Basic
     /// </summary>
     public string ClientSecret { get; set; } = string.Empty;
+    public string ClientId { get; set; } = string.Empty;
+
     public string EndpointUrl { get; set; } = string.Empty;
     public string AccessToken { get; set; } = string.Empty;
 }

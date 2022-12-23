@@ -33,7 +33,7 @@ public class AuthorizationTokenExchangeController : Controller
         _logger = loggerFactory.CreateLogger<AuthorizationTokenExchangeController>();
     }
 
-    // TODO require auth with Authorization Basic secret
+    // TODO require auth with Authorization Basic clientid:clientSecret
     [AllowAnonymous]
     [HttpPost("~/connect/oauthTokenExchangetoken"), Produces("application/json")]
     public async Task<IActionResult> Exchange([FromForm] OauthTokenExchangePayload oauthTokenExchangePayload)
