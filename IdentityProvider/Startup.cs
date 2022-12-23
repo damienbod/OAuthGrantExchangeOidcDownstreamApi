@@ -9,6 +9,9 @@ using Fido2NetLib;
 using StsServerIdentity.Services.Certificate;
 using System.Security.Cryptography.X509Certificates;
 using OAuthGrantExchangeIntegration.Server;
+using idunno.Authentication.Basic;
+using System.Security.Claims;
+using Microsoft.Extensions.Options;
 
 namespace OpeniddictServer;
 
@@ -170,6 +173,33 @@ public class Startup
 
                 // Register the ASP.NET Core host.
                 options.UseAspNetCore();
+            });
+
+        services.AddAuthentication(BasicAuthenticationDefaults.AuthenticationScheme)
+            .AddBasic(options =>
+            {
+                options.Realm = "oauthtokenexchange";
+                options.Events = new BasicAuthenticationEvents
+                {
+                    OnValidateCredentials = context =>
+                    {
+                        var config = context.HttpContext.RequestServices.GetService<IOptions<OauthTokenExchangeConfiguration>>();
+                        
+                        if(ValidateBasicAuthentication.IsValid(context.Username, context.Password, config.Value))
+                        { 
+                            var claims = new[]
+                            {
+                                new Claim( ClaimTypes.NameIdentifier, context.Username, ClaimValueTypes.String, context.Options.ClaimsIssuer),
+                                new Claim( ClaimTypes.Name, context.Username, ClaimValueTypes.String, context.Options.ClaimsIssuer)
+                            };
+
+                            context.Principal = new ClaimsPrincipal(new ClaimsIdentity(claims, context.Scheme.Name));
+                            context.Success();
+                        }
+
+                        return Task.CompletedTask;
+                    }
+                };
             });
 
         // Register the worker responsible of seeding the database.

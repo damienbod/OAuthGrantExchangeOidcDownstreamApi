@@ -14,9 +14,9 @@ public static class RequestDelegatedAccessToken
             throw new ArgumentException("Httpclient missing, is null");
 
         var builder = new StringBuilder()
-                            .Append(EscapeDataString(reqData.ClientId))
-                            .Append(':')
-                            .Append(EscapeDataString(OauthTokenExchangeExtentions.ToSha256(reqData.ClientSecret)));
+            .Append(reqData.ClientId)
+            .Append(':')
+            .Append(OauthTokenExchangeExtentions.ToSha256(reqData.ClientSecret));
 
         var credentials = Convert.ToBase64String(Encoding.ASCII.GetBytes(builder.ToString()));
 
@@ -73,15 +73,5 @@ public static class RequestDelegatedAccessToken
         }
 
         return null;
-    }
-
-    static string EscapeDataString(string value)
-    {
-        if (string.IsNullOrEmpty(value))
-        {
-            return null;
-        }
-
-        return Uri.EscapeDataString(value).Replace("%20", "+");
     }
 }

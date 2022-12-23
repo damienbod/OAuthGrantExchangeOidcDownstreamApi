@@ -10,6 +10,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using OpeniddictServer.Data;
 using Microsoft.AspNetCore.Authorization;
+using idunno.Authentication.Basic;
 
 namespace IdentityProvider.Controllers;
 
@@ -33,8 +34,7 @@ public class AuthorizationTokenExchangeController : Controller
         _logger = loggerFactory.CreateLogger<AuthorizationTokenExchangeController>();
     }
 
-    // TODO require auth with Authorization Basic clientid:clientSecret
-    [AllowAnonymous]
+    [Authorize(AuthenticationSchemes = BasicAuthenticationDefaults.AuthenticationScheme)]
     [HttpPost("~/connect/oauthTokenExchangetoken"), Produces("application/json")]
     public async Task<IActionResult> Exchange([FromForm] OauthTokenExchangePayload oauthTokenExchangePayload)
     {
