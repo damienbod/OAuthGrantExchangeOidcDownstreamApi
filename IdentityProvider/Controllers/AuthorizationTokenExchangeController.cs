@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Logging;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using OpeniddictServer.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace IdentityProvider.Controllers;
 
@@ -33,6 +34,7 @@ public class AuthorizationTokenExchangeController : Controller
     }
 
     // TODO require auth with Authorization Basic secret
+    [AllowAnonymous]
     [HttpPost("~/connect/oauthTokenExchangetoken"), Produces("application/json")]
     public async Task<IActionResult> Exchange([FromForm] OauthTokenExchangePayload oauthTokenExchangePayload)
     {
