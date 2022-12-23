@@ -19,12 +19,12 @@ public static class ValidateOauthTokenExchangeRequestPayload
             return (false, $"subject_token_type parameter has an incorrect value, expected {OAuthGrantExchangeConsts.TOKEN_TYPE_ACCESS_TOKEN}");
         };
 
-        if (!oauthTokenExchangePayload.audience.Equals(oauthTokenExchangeConfiguration.Audience))
+        if (!oauthTokenExchangePayload.audience!.Equals(oauthTokenExchangeConfiguration.Audience))
         {
             return (false, "obo client_id parameter has an incorrect value");
         };
 
-        if (!oauthTokenExchangePayload.scope.ToLower().Equals(oauthTokenExchangeConfiguration.ScopeForNewAccessToken.ToLower()))
+        if (!oauthTokenExchangePayload.scope!.ToLower().Equals(oauthTokenExchangeConfiguration.ScopeForNewAccessToken.ToLower()))
         {
             return (false, "scope parameter has an incorrect value");
         };
