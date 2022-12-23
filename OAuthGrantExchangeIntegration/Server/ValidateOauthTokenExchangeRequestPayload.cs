@@ -33,7 +33,7 @@ public static class ValidateOauthTokenExchangeRequestPayload
                 OAuthGrantExchangeConsts.ERROR_INVALID_SCOPE);
         };
 
-        return (true, string.Empty, OAuthGrantExchangeConsts.ERROR_INVALID_REQUEST);
+        return (true, string.Empty, string.Empty);
     }
 
     public static (bool Valid, string Reason, ClaimsPrincipal? ClaimsPrincipal) ValidateTokenAndSignature(
