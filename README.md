@@ -4,7 +4,7 @@
 
 OAuth 2.0 Token Exchange delegated implementation with Azure AD and OpenIddict
 
-![OBO](https://github.com/damienbod/OAuthGrantExchangeOidcDownstreamApi/blob/main/images/oauth_token_exchaneg_aad_openiddict_01.png)
+![OAuth 2.0 Token Exchange](https://github.com/damienbod/OAuthGrantExchangeOidcDownstreamApi/blob/main/images/oauth_token_exchaneg_aad_openiddict_01.png)
 
 ## Links
 
