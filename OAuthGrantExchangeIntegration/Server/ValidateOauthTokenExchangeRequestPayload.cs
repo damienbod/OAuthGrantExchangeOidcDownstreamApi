@@ -7,29 +7,33 @@ namespace OAuthGrantExchangeIntegration.Server;
 
 public static class ValidateOauthTokenExchangeRequestPayload
 {
-    public static (bool Valid, string Reason) IsValid(OauthTokenExchangePayload oauthTokenExchangePayload, OauthTokenExchangeConfiguration oauthTokenExchangeConfiguration)
+    public static (bool Valid, string Reason, string error) IsValid(OauthTokenExchangePayload oauthTokenExchangePayload, OauthTokenExchangeConfiguration oauthTokenExchangeConfiguration)
     {
         if(!oauthTokenExchangePayload.grant_type.Equals(OAuthGrantExchangeConsts.GRANT_TYPE))
         {
-            return (false, $"grant_type parameter has an incorrect value, expected {OAuthGrantExchangeConsts.GRANT_TYPE}");
+            return (false, $"grant_type parameter has an incorrect value, expected {OAuthGrantExchangeConsts.GRANT_TYPE}",
+                OAuthGrantExchangeConsts.ERROR_UNSUPPORTED_GRANT_TYPE);
         };
 
         if (!oauthTokenExchangePayload.subject_token_type.ToLower().Equals(OAuthGrantExchangeConsts.TOKEN_TYPE_ACCESS_TOKEN))
         {
-            return (false, $"subject_token_type parameter has an incorrect value, expected {OAuthGrantExchangeConsts.TOKEN_TYPE_ACCESS_TOKEN}");
+            return (false, $"subject_token_type parameter has an incorrect value, expected {OAuthGrantExchangeConsts.TOKEN_TYPE_ACCESS_TOKEN}",
+                OAuthGrantExchangeConsts.ERROR_INVALID_REQUEST);
         };
 
         if (!oauthTokenExchangePayload.audience!.Equals(oauthTokenExchangeConfiguration.Audience))
         {
-            return (false, "obo client_id parameter has an incorrect value");
+            return (false, "obo client_id parameter has an incorrect value",
+                OAuthGrantExchangeConsts.ERROR_INVALID_CLIENT);
         };
 
         if (!oauthTokenExchangePayload.scope!.ToLower().Equals(oauthTokenExchangeConfiguration.ScopeForNewAccessToken.ToLower()))
         {
-            return (false, "scope parameter has an incorrect value");
+            return (false, "scope parameter has an incorrect value",
+                OAuthGrantExchangeConsts.ERROR_INVALID_SCOPE);
         };
 
-        return (true, string.Empty);
+        return (true, string.Empty, OAuthGrantExchangeConsts.ERROR_INVALID_REQUEST);
     }
 
     public static (bool Valid, string Reason, ClaimsPrincipal? ClaimsPrincipal) ValidateTokenAndSignature(

@@ -36,11 +36,11 @@ public class AuthorizationTokenExchangeController : Controller
     [HttpPost("~/connect/oauthTokenExchangetoken"), Produces("application/json")]
     public async Task<IActionResult> Exchange([FromForm] OauthTokenExchangePayload oauthTokenExchangePayload)
     {
-        var (Valid, Reason) = ValidateOauthTokenExchangeRequestPayload.IsValid(oauthTokenExchangePayload, _oauthTokenExchangeConfigurationConfiguration);
+        var (Valid, Reason, Error) = ValidateOauthTokenExchangeRequestPayload.IsValid(oauthTokenExchangePayload, _oauthTokenExchangeConfigurationConfiguration);
 
         if(!Valid)
         {
-            return UnauthorizedValidationParametersFailed(oauthTokenExchangePayload, Reason);
+            return UnauthorizedValidationParametersFailed(oauthTokenExchangePayload, Reason, Error);
         }
 
         // get well known endpoints and validate access token sent in the assertion
@@ -113,7 +113,7 @@ public class AuthorizationTokenExchangeController : Controller
     {
         var errorResult = new OauthTokenExchangeErrorResponse
         {
-            error = "assertion has incorrect claims",
+            error = OAuthGrantExchangeConsts.ERROR_INVALID_REQUEST,
             error_description = "user does not exist",
             timestamp = DateTime.UtcNow,
             correlation_id = Guid.NewGuid().ToString(),
@@ -133,7 +133,7 @@ public class AuthorizationTokenExchangeController : Controller
     {
         var errorResult = new OauthTokenExchangeErrorResponse
         {
-            error = "assertion has incorrect claims",
+            error = OAuthGrantExchangeConsts.ERROR_INVALID_REQUEST,
             error_description = "incorrect email used in preferred user name",
             timestamp = DateTime.UtcNow,
             correlation_id = Guid.NewGuid().ToString(),
@@ -153,7 +153,7 @@ public class AuthorizationTokenExchangeController : Controller
     {
         var errorResult = new OauthTokenExchangeErrorResponse
         {
-            error = "Validation request parameters failed",
+            error = OAuthGrantExchangeConsts.ERROR_INVALID_REQUEST,
             error_description = accessTokenValidationResult.Reason,
             timestamp = DateTime.UtcNow,
             correlation_id = Guid.NewGuid().ToString(),
@@ -174,11 +174,12 @@ public class AuthorizationTokenExchangeController : Controller
         return Unauthorized(errorResult);
     }
 
-    private IActionResult UnauthorizedValidationParametersFailed(OauthTokenExchangePayload oauthTokenExchangePayload, string Reason)
+    private IActionResult UnauthorizedValidationParametersFailed(OauthTokenExchangePayload oauthTokenExchangePayload, 
+        string Reason, string error)
     {
         var errorResult = new OauthTokenExchangeErrorResponse
         {
-            error = "Validation request parameters failed",
+            error = error,
             error_description = Reason,
             timestamp = DateTime.UtcNow,
             correlation_id = Guid.NewGuid().ToString(),
