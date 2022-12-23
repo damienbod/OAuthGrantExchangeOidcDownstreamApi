@@ -7,31 +7,26 @@ namespace OAuthGrantExchangeIntegration.Server;
 
 public static class ValidateOauthTokenExchangeRequestPayload
 {
-    public static (bool Valid, string Reason) IsValid(OauthTokenExchangePayload oauthTokenExchangePayload, OauthTokenExchangeConfiguration oboConfiguration)
+    public static (bool Valid, string Reason) IsValid(OauthTokenExchangePayload oauthTokenExchangePayload, OauthTokenExchangeConfiguration oauthTokenExchangeConfiguration)
     {
-        if(!oauthTokenExchangePayload.requested_token_use.ToLower().Equals("on_behalf_of"))
+        if(!oauthTokenExchangePayload.grant_type.Equals(OAuthGrantExchangeConsts.GRANT_TYPE))
         {
-            return (false, "obo requested_token_use parameter has an incorrect value, expected on_behalf_of");
+            return (false, $"grant_type parameter has an incorrect value, expected {OAuthGrantExchangeConsts.GRANT_TYPE}");
         };
 
-        if (!oauthTokenExchangePayload.grant_type.ToLower().Equals("urn:ietf:params:oauth:grant-type:jwt-bearer"))
+        if (!oauthTokenExchangePayload.subject_token_type.ToLower().Equals(OAuthGrantExchangeConsts.TOKEN_TYPE_ACCESS_TOKEN))
         {
-            return (false, "obo grant_type parameter has an incorrect value, expected urn:ietf:params:oauth:grant-type:jwt-bearer");
+            return (false, $"subject_token_type parameter has an incorrect value, expected {OAuthGrantExchangeConsts.TOKEN_TYPE_ACCESS_TOKEN}");
         };
 
-        if (!oauthTokenExchangePayload.client_id.Equals(oboConfiguration.ClientId))
+        if (!oauthTokenExchangePayload.client_id.Equals(oauthTokenExchangeConfiguration.ClientId))
         {
             return (false, "obo client_id parameter has an incorrect value");
         };
 
-        if (!oauthTokenExchangePayload.client_secret.Equals(OauthTokenExchangeExtentions.ToSha256(oboConfiguration.ClientSecret)))
+        if (!oauthTokenExchangePayload.scope.ToLower().Equals(oauthTokenExchangeConfiguration.ScopeForNewAccessToken.ToLower()))
         {
-            return (false, "obo client secret parameter has an incorrect value");
-        };
-
-        if (!oauthTokenExchangePayload.scope.ToLower().Equals(oboConfiguration.ScopeForNewAccessToken.ToLower()))
-        {
-            return (false, "obo scope parameter has an incorrect value");
+            return (false, "scope parameter has an incorrect value");
         };
 
         return (true, string.Empty);

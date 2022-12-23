@@ -17,9 +17,9 @@ public static class RequestDelegatedAccessToken
         var oboTokenExchangeBody = new[]
         {
             
-            new KeyValuePair<string, string>("grant_type", "urn:ietf:params:oauth:grant-type:token-exchange"),
+            new KeyValuePair<string, string>("grant_type", OAuthGrantExchangeConsts.GRANT_TYPE),
             new KeyValuePair<string, string>("client_id", reqData.ClientId),
-            new KeyValuePair<string, string>("subject_token_type", "urn:ietf:params:oauth:token-type:access_token"),
+            new KeyValuePair<string, string>("subject_token_type", OAuthGrantExchangeConsts.TOKEN_TYPE_ACCESS_TOKEN),
             new KeyValuePair<string, string>("subject_token", reqData.AccessToken),
             new KeyValuePair<string, string>("scope", reqData.Scope)
 
