@@ -14,9 +14,6 @@ public static class ValidateBasicAuthentication
             return false;
         };
 
-
         return true;
     }
-
-
 }
