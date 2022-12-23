@@ -73,16 +73,16 @@ public class ApiTokenCacheClient
                 AccessToken = aadAccessToken,
                 ClientSecret = clientSecret,
                 Audience = clientId,
-                EndpointUrl = "/connect/obotoken",
-                OboHttpClient = oboHttpClient
+                EndpointUrl = "/connect/oauthTokenExchangetoken",
+                GrantExchangeHttpClient = oboHttpClient
             }, _logger);
 
         if (oboSuccessResponse != null)
         {
             return new AccessTokenItem
             {
-                ExpiresIn = DateTime.UtcNow.AddSeconds(oboSuccessResponse.ExpiresIn),
-                AccessToken = oboSuccessResponse.AccessToken
+                ExpiresIn = DateTime.UtcNow.AddSeconds(oboSuccessResponse.expires_in),
+                AccessToken = oboSuccessResponse.access_token
             };
         }
 
