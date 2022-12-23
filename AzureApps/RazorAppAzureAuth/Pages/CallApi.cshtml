@@ -1,0 +1,17 @@
+﻿@page
+@model WebAppUserApis.Pages.CallApiModel
+@{
+    ViewData["Title"] = "CallApi";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<h2>Call API</h2>
+
+<h6>Gets the data from the Azure AD protected Web API (delegated) which uses an OpenIddict downstream API OBO flow</h6>
+
+@foreach (var item in Model.DataFromApi!)
+{
+    <pre>@item</pre>
+}
+
+
