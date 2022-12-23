@@ -7,21 +7,22 @@ namespace OAuthGrantExchangeIntegration;
 /// </summary>
 public class OauthTokenExchangeErrorResponse
 {
-    [JsonPropertyName("invalid_request")]
-    public string invalid_request { get; set; } = string.Empty;
-    [JsonPropertyName("invalid_client")]
-    public string invalid_client { get; set; } = string.Empty;
-    [JsonPropertyName("invalid_grant")]
-    public string invalid_grant { get; set; } = string.Empty;
-    [JsonPropertyName("unauthorized_client")]
-    public string unauthorized_client { get; set; } = string.Empty;
-    [JsonPropertyName("unsupported_grant_type")]
-    public string unsupported_grant_type { get; set; } = string.Empty;
-
+    /// <summary>
+    /// invalid_request
+    /// invalid_client
+    /// invalid_grant
+    /// unauthorized_client
+    /// unsupported_grant_type
+    /// invalid_scope
+    /// </summary>
     [JsonPropertyName("error")]
     public string? error { get; set; }
+
     [JsonPropertyName("error_description")]
     public string? error_description { get; set; }
+
+    [JsonPropertyName("error_uri")]
+    public string? error_uri { get; set; }    
     [JsonPropertyName("error_codes")]
     public List<int>? error_codes { get; set; } = new List<int>();
     [JsonPropertyName("timestamp")]

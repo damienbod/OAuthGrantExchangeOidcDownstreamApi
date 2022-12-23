@@ -13,15 +13,15 @@ using OpeniddictServer.Data;
 
 namespace IdentityProvider.Controllers;
 
-public class AuthorizationOboController : Controller
+public class AuthorizationTokenExchangeController : Controller
 {
     private readonly IWebHostEnvironment _environment;
     private readonly IConfiguration _configuration;
     private readonly OauthTokenExchangeConfiguration _oauthTokenExchangeConfigurationConfiguration;
-    private readonly ILogger<AuthorizationOboController> _logger;
+    private readonly ILogger<AuthorizationTokenExchangeController> _logger;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public AuthorizationOboController(IConfiguration configuration, 
+    public AuthorizationTokenExchangeController(IConfiguration configuration, 
         IWebHostEnvironment env, IOptions<OauthTokenExchangeConfiguration> oauthTokenExchangeConfigurationConfiguration,
         UserManager<ApplicationUser> userManager,
         ILoggerFactory loggerFactory)
@@ -30,7 +30,7 @@ public class AuthorizationOboController : Controller
         _environment = env;
         _oauthTokenExchangeConfigurationConfiguration = oauthTokenExchangeConfigurationConfiguration.Value;
         _userManager= userManager;
-        _logger = loggerFactory.CreateLogger<AuthorizationOboController>();
+        _logger = loggerFactory.CreateLogger<AuthorizationTokenExchangeController>();
     }
 
     [AllowAnonymous]
