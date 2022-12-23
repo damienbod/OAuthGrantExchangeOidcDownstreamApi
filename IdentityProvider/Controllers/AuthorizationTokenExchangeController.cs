@@ -33,7 +33,7 @@ public class AuthorizationTokenExchangeController : Controller
         _logger = loggerFactory.CreateLogger<AuthorizationTokenExchangeController>();
     }
 
-    [AllowAnonymous]
+    // TODO require auth with Authorization Basic secret
     [HttpPost("~/connect/oauthTokenExchangetoken"), Produces("application/json")]
     public async Task<IActionResult> Exchange([FromForm] OauthTokenExchangePayload oauthTokenExchangePayload)
     {
@@ -52,7 +52,7 @@ public class AuthorizationTokenExchangeController : Controller
         var wellKnownEndpoints =  await configurationManager.GetConfigurationAsync();
 
         var accessTokenValidationResult = ValidateOauthTokenExchangeRequestPayload.ValidateTokenAndSignature(
-            oauthTokenExchangePayload.assertion,
+            oauthTokenExchangePayload.subject_token,
             _oauthTokenExchangeConfigurationConfiguration,
             wellKnownEndpoints.SigningKeys);
         
@@ -163,7 +163,7 @@ public class AuthorizationTokenExchangeController : Controller
 
         if (IdentityModelEventSource.ShowPII)
         {
-            _logger.LogDebug("OBO new access token returned for assertion {assertion}", oauthTokenExchangePayload.assertion);
+            _logger.LogDebug("OBO new access token returned for assertion {assertion}", oauthTokenExchangePayload.subject_token);
         }
 
         _logger.LogInformation("{error} {error_description} {correlation_id} {trace_id}",
@@ -194,7 +194,7 @@ public class AuthorizationTokenExchangeController : Controller
 
         if (IdentityModelEventSource.ShowPII)
         {
-            _logger.LogDebug("OBO new access token returned for assertion {assertion}", oauthTokenExchangePayload.assertion);
+            _logger.LogDebug("OBO new access token returned for assertion {assertion}", oauthTokenExchangePayload.subject_token);
         }
 
         return Unauthorized(errorResult);
