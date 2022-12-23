@@ -1,6 +1,6 @@
 ﻿namespace OAuthGrantExchangeIntegration.Client;
 
-public class GetDelegatedApiTokenOboModel
+public class GetDelegatedApiTokenOAuthTokenExchangeModel
 {
     public HttpClient? GrantExchangeHttpClient { get; set; }
 

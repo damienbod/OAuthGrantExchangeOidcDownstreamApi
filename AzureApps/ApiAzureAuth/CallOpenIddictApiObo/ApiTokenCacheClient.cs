@@ -63,18 +63,18 @@ public class ApiTokenCacheClient
     private async Task<AccessTokenItem> GetApiTokenOauthGrantTokenExchangeAad(string clientId,
         string scope, string clientSecret, string aadAccessToken)
     {
-        var oboHttpClient = _httpClientFactory.CreateClient();
-        oboHttpClient.BaseAddress = new Uri(_downstreamApiConfigurations.Value.IdentityProviderUrl);
+        var tokenExchangeHttpClient = _httpClientFactory.CreateClient();
+        tokenExchangeHttpClient.BaseAddress = new Uri(_downstreamApiConfigurations.Value.IdentityProviderUrl);
 
         var tokenExchangeSuccessResponse = await RequestDelegatedAccessToken.GetDelegatedApiTokenTokenExchange(
-            new GetDelegatedApiTokenOboModel
+            new GetDelegatedApiTokenOAuthTokenExchangeModel
             {
                 Scope = scope,
                 AccessToken = aadAccessToken,
                 ClientSecret = clientSecret,
                 Audience = clientId,
                 EndpointUrl = "/connect/oauthTokenExchangetoken",
-                GrantExchangeHttpClient = oboHttpClient
+                GrantExchangeHttpClient = tokenExchangeHttpClient
             }, _logger);
 
         if (tokenExchangeSuccessResponse != null)

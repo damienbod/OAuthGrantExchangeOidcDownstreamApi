@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Net.Http.Headers;
+using System.Text.Json;
 using Microsoft.Extensions.Logging;
 
 namespace OAuthGrantExchangeIntegration.Client;
@@ -6,17 +7,17 @@ namespace OAuthGrantExchangeIntegration.Client;
 public static class RequestDelegatedAccessToken
 {
     public static async Task<OauthTokenExchangeSuccessResponse?> GetDelegatedApiTokenTokenExchange(
-        GetDelegatedApiTokenOboModel reqData, ILogger logger)
+        GetDelegatedApiTokenOAuthTokenExchangeModel reqData, ILogger logger)
     {
         if (reqData.GrantExchangeHttpClient == null)
             throw new ArgumentException("Httpclient missing, is null");
 
-        // TODO OauthTokenExchangeExtentions.ToSha256(reqData.ClientSecret)
+        reqData.GrantExchangeHttpClient.DefaultRequestHeaders.Authorization = 
+            new AuthenticationHeaderValue("Basic", OauthTokenExchangeExtentions.ToSha256(reqData.ClientSecret));
 
         // Content-Type: application/x-www-form-urlencoded
-        var oboTokenExchangeBody = new[]
+        var oauthTokenExchangeBody = new[]
         {
-            
             new KeyValuePair<string, string>("grant_type", OAuthGrantExchangeConsts.GRANT_TYPE),
             new KeyValuePair<string, string>("audience", reqData.Audience),
             new KeyValuePair<string, string>("subject_token_type", OAuthGrantExchangeConsts.TOKEN_TYPE_ACCESS_TOKEN),
@@ -30,7 +31,7 @@ public static class RequestDelegatedAccessToken
         };
 
         var response = await reqData.GrantExchangeHttpClient.PostAsync(reqData.EndpointUrl, 
-            new FormUrlEncodedContent(oboTokenExchangeBody));
+            new FormUrlEncodedContent(oauthTokenExchangeBody));
 
         if (response.IsSuccessStatusCode)
         {
