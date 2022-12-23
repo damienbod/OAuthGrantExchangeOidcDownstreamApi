@@ -17,3 +17,5 @@ https://www.youtube.com/watch?v=Ue8HKBGkIJY&t=
 https://github.com/damienbod/OnBehalfFlowOidcDownstreamApi
 
 https://www.rfc-editor.org/rfc/rfc6749#section-5.2
+
+https://github.com/blowdart/idunno.Authentication/tree/dev/src/idunno.Authentication.Basic
