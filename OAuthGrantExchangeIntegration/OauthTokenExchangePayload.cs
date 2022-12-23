@@ -25,6 +25,13 @@ public class OauthTokenExchangePayload
     [JsonPropertyName("subject_token")]
     public string subject_token { get; set; } = string.Empty;
 
+    /// <summary>
+    /// urn:ietf:params:oauth:token-type:access_token
+    /// urn:ietf:params:oauth:token-type:refresh_token
+    /// urn:ietf:params:oauth:token-type:id_token
+    /// urn:ietf:params:oauth:token-type:saml1
+    /// urn:ietf:params:oauth:token-type:saml2
+    /// </summary>
     [JsonPropertyName("subject_token_type")]
     public string subject_token_type { get; set; } = string.Empty;
 

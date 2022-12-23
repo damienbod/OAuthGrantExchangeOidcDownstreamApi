@@ -11,14 +11,23 @@ public static class RequestDelegatedAccessToken
         if (reqData.GrantExchangeHttpClient == null)
             throw new ArgumentException("Httpclient missing, is null");
 
+        // TODO OauthTokenExchangeExtentions.ToSha256(reqData.ClientSecret)
+
         // Content-Type: application/x-www-form-urlencoded
         var oboTokenExchangeBody = new[]
         {
+            
             new KeyValuePair<string, string>("grant_type", "urn:ietf:params:oauth:grant-type:token-exchange"),
             new KeyValuePair<string, string>("client_id", reqData.ClientId),
-            new KeyValuePair<string, string>("subject_token_type", OauthTokenExchangeExtentions.ToSha256(reqData.ClientSecret)),
+            new KeyValuePair<string, string>("subject_token_type", "urn:ietf:params:oauth:token-type:access_token"),
             new KeyValuePair<string, string>("subject_token", reqData.AccessToken),
             new KeyValuePair<string, string>("scope", reqData.Scope)
+
+            // new KeyValuePair<string, string>("resource", "--optional--")
+            // new KeyValuePair<string, string>("audience", "--optional--")
+            // new KeyValuePair<string, string>("requested_token_type", "--optional--")
+            // new KeyValuePair<string, string>("actor_token", "--optional--")
+            // new KeyValuePair<string, string>("actor_token_type", "--optional--")
         };
 
         var response = await reqData.GrantExchangeHttpClient.PostAsync(reqData.EndpointUrl, 
