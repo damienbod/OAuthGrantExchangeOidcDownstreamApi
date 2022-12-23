@@ -36,7 +36,8 @@ public class AuthorizationTokenExchangeController : Controller
     [HttpPost("~/connect/oauthTokenExchangetoken"), Produces("application/json")]
     public async Task<IActionResult> Exchange([FromForm] OauthTokenExchangePayload oauthTokenExchangePayload)
     {
-        var (Valid, Reason, Error) = ValidateOauthTokenExchangeRequestPayload.IsValid(oauthTokenExchangePayload, _oauthTokenExchangeConfigurationConfiguration);
+        var (Valid, Reason, Error) = ValidateOauthTokenExchangeRequestPayload
+            .IsValid(oauthTokenExchangePayload, _oauthTokenExchangeConfigurationConfiguration);
 
         if(!Valid)
         {
@@ -71,6 +72,8 @@ public class AuthorizationTokenExchangeController : Controller
         }
 
         // validate user exists
+        // TODO validate that Azure AD access token is a delegated token => must contain a scp claim and a oid claim
+
         var user = await _userManager.FindByNameAsync(name);
         if (user == null)
         {
