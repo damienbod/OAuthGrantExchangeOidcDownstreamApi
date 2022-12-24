@@ -74,6 +74,7 @@ public static class RequestDelegatedAccessToken
             // new KeyValuePair<string, string>("actor_token", "--optional--")
             // new KeyValuePair<string, string>("actor_token_type", "--optional--")
         };
+
         return oauthTokenExchangeBody;
     }
 
