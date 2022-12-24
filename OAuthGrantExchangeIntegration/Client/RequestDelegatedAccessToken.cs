@@ -85,6 +85,7 @@ public static class RequestDelegatedAccessToken
             .Append(OauthTokenExchangeExtentions.ToSha256(reqData.ClientSecret));
 
         var credentials = Convert.ToBase64String(Encoding.ASCII.GetBytes(builder.ToString()));
+
         return credentials;
     }
 }

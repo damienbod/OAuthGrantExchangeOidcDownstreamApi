@@ -16,5 +16,4 @@ public class OAuthGrantExchangeConsts
     public const string ERROR_UNAUTHORIZED_CLIENT = "unauthorized_client";
     public const string ERROR_UNSUPPORTED_GRANT_TYPE = "unsupported_grant_type";
     public const string ERROR_INVALID_SCOPE = "invalid_scope";
-
 }
