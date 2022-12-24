@@ -13,32 +13,14 @@ public static class RequestDelegatedAccessToken
         if (reqData.GrantExchangeHttpClient == null)
             throw new ArgumentException("Httpclient missing, is null");
 
-        var builder = new StringBuilder()
-            .Append(reqData.ClientId)
-            .Append(':')
-            .Append(OauthTokenExchangeExtentions.ToSha256(reqData.ClientSecret));
+        string credentials = CreateBasicAuthenticationHeader(reqData);
 
-        var credentials = Convert.ToBase64String(Encoding.ASCII.GetBytes(builder.ToString()));
-
-        reqData.GrantExchangeHttpClient.DefaultRequestHeaders.Authorization = 
+        reqData.GrantExchangeHttpClient.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Basic", credentials);
 
-        // Content-Type: application/x-www-form-urlencoded
-        var oauthTokenExchangeBody = new[]
-        {
-            new KeyValuePair<string, string>("grant_type", OAuthGrantExchangeConsts.GRANT_TYPE),
-            new KeyValuePair<string, string>("audience", reqData.Audience),
-            new KeyValuePair<string, string>("subject_token_type", OAuthGrantExchangeConsts.TOKEN_TYPE_ACCESS_TOKEN),
-            new KeyValuePair<string, string>("subject_token", reqData.AccessToken),
-            new KeyValuePair<string, string>("scope", reqData.Scope)
+        KeyValuePair<string, string>[] oauthTokenExchangeBody = CreateTokenExchangeBody(reqData);
 
-            // new KeyValuePair<string, string>("resource", "--optional--")
-            // new KeyValuePair<string, string>("requested_token_type", "--optional--")
-            // new KeyValuePair<string, string>("actor_token", "--optional--")
-            // new KeyValuePair<string, string>("actor_token_type", "--optional--")
-        };
-
-        var response = await reqData.GrantExchangeHttpClient.PostAsync(reqData.EndpointUrl, 
+        var response = await reqData.GrantExchangeHttpClient.PostAsync(reqData.EndpointUrl,
             new FormUrlEncodedContent(oauthTokenExchangeBody));
 
         if (response.IsSuccessStatusCode)
@@ -47,13 +29,14 @@ public static class RequestDelegatedAccessToken
             await response.Content.ReadAsStreamAsync());
             return tokenResponse;
         }
+
         if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
         {
             // Unauthorized error
             var errorResult = await JsonSerializer.DeserializeAsync<OauthTokenExchangeErrorResponse>(
            await response.Content.ReadAsStreamAsync());
 
-            if(errorResult != null)
+            if (errorResult != null)
             {
                 logger.LogInformation("{error} {error_description} {correlation_id} {trace_id}",
                     errorResult.error,
@@ -73,5 +56,35 @@ public static class RequestDelegatedAccessToken
         }
 
         return null;
+    }
+
+    private static KeyValuePair<string, string>[] CreateTokenExchangeBody(GetDelegatedApiTokenOAuthTokenExchangeModel reqData)
+    {
+        // Content-Type: application/x-www-form-urlencoded
+        var oauthTokenExchangeBody = new[]
+        {
+            new KeyValuePair<string, string>("grant_type", OAuthGrantExchangeConsts.GRANT_TYPE),
+            new KeyValuePair<string, string>("audience", reqData.Audience),
+            new KeyValuePair<string, string>("subject_token_type", OAuthGrantExchangeConsts.TOKEN_TYPE_ACCESS_TOKEN),
+            new KeyValuePair<string, string>("subject_token", reqData.AccessToken),
+            new KeyValuePair<string, string>("scope", reqData.Scope)
+
+            // new KeyValuePair<string, string>("resource", "--optional--")
+            // new KeyValuePair<string, string>("requested_token_type", "--optional--")
+            // new KeyValuePair<string, string>("actor_token", "--optional--")
+            // new KeyValuePair<string, string>("actor_token_type", "--optional--")
+        };
+        return oauthTokenExchangeBody;
+    }
+
+    private static string CreateBasicAuthenticationHeader(GetDelegatedApiTokenOAuthTokenExchangeModel reqData)
+    {
+        var builder = new StringBuilder()
+            .Append(reqData.ClientId)
+            .Append(':')
+            .Append(OauthTokenExchangeExtentions.ToSha256(reqData.ClientSecret));
+
+        var credentials = Convert.ToBase64String(Encoding.ASCII.GetBytes(builder.ToString()));
+        return credentials;
     }
 }

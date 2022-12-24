@@ -60,8 +60,11 @@ public class ApiTokenCacheClient
         return newAccessToken.AccessToken;
     }
 
-    private async Task<AccessTokenItem> GetApiTokenOauthGrantTokenExchangeAad(string clientId, string audience,
-        string scope, string clientSecret, string aadAccessToken)
+    private async Task<AccessTokenItem> GetApiTokenOauthGrantTokenExchangeAad(string clientId, 
+        string audience,
+        string scope, 
+        string clientSecret, 
+        string aadAccessToken)
     {
         var tokenExchangeHttpClient = _httpClientFactory.CreateClient();
         tokenExchangeHttpClient.BaseAddress = new Uri(_downstreamApiConfigurations.Value.IdentityProviderUrl);
