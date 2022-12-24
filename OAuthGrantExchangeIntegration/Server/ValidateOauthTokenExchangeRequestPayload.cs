@@ -69,6 +69,28 @@ public static class ValidateOauthTokenExchangeRequestPayload
         }
     }
 
+    public static bool IsDelegatedAadAccessToken(ClaimsPrincipal claimsPrincipal)
+    {
+        // oid if magic MS namespaces not user
+        var oid = claimsPrincipal.Claims.FirstOrDefault(t => t.Type == "http://schemas.microsoft.com/identity/claims/objectidentifier");
+        // scp if magic MS namespaces not added
+        var scp = claimsPrincipal.Claims.FirstOrDefault(t => t.Type == "http://schemas.microsoft.com/identity/claims/scope");
+
+        if (oid != null && scp != null)
+        {
+            return true;
+        }
+
+        oid = claimsPrincipal.Claims.FirstOrDefault(t => t.Type == "oid");
+        scp = claimsPrincipal.Claims.FirstOrDefault(t => t.Type == "scp");
+        if (oid != null && scp != null)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     public static string GetPreferredUserName(ClaimsPrincipal claimsPrincipal)
     {
         string preferredUsername = string.Empty;

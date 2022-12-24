@@ -66,9 +66,16 @@ public class AuthorizationTokenExchangeController : Controller
         // get claims from aad token and re use in OpenIddict token
         var claimsPrincipal = accessTokenValidationResult.ClaimsPrincipal;
 
+        var isDelegatedToken = ValidateOauthTokenExchangeRequestPayload.IsDelegatedAadAccessToken(claimsPrincipal);
+
+        if (!isDelegatedToken)
+        {
+            return UnauthorizedValidationRequireDelegatedTokenFailed();
+        }
+
         var name = ValidateOauthTokenExchangeRequestPayload.GetPreferredUserName(claimsPrincipal);
-        var isNameAnEmail = ValidateOauthTokenExchangeRequestPayload.IsEmailValid(name);
-        if(!isNameAnEmail)
+        var isNameAndEmail = ValidateOauthTokenExchangeRequestPayload.IsEmailValid(name);
+        if(!isNameAndEmail)
         {
             return UnauthorizedValidationPrefferedUserNameFailed();
         }
@@ -120,6 +127,26 @@ public class AuthorizationTokenExchangeController : Controller
         {
             error = OAuthGrantExchangeConsts.ERROR_INVALID_REQUEST,
             error_description = "user does not exist",
+            timestamp = DateTime.UtcNow,
+            correlation_id = Guid.NewGuid().ToString(),
+            trace_id = Guid.NewGuid().ToString(),
+        };
+
+        _logger.LogInformation("{error} {error_description} {correlation_id} {trace_id}",
+            errorResult.error,
+            errorResult.error_description,
+            errorResult.correlation_id,
+            errorResult.trace_id);
+
+        return Unauthorized(errorResult);
+    }
+
+    private IActionResult UnauthorizedValidationRequireDelegatedTokenFailed()
+    {
+        var errorResult = new OauthTokenExchangeErrorResponse
+        {
+            error = OAuthGrantExchangeConsts.ERROR_INVALID_REQUEST,
+            error_description = "Only delegated access tokens accepted",
             timestamp = DateTime.UtcNow,
             correlation_id = Guid.NewGuid().ToString(),
             trace_id = Guid.NewGuid().ToString(),
