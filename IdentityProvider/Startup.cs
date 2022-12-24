@@ -12,6 +12,7 @@ using OAuthGrantExchangeIntegration.Server;
 using idunno.Authentication.Basic;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
+using OAuthGrantExchangeIntegration;
 
 namespace OpeniddictServer;
 
@@ -142,7 +143,7 @@ public class Startup
                 // Note: this sample uses the code, device code, password and refresh token flows, but you
                 // can enable the other flows if you need to support implicit or client credentials.
                 options.AllowAuthorizationCodeFlow()
-                    .AllowCustomFlow("urn:ietf:params:oauth:grant-type:jwt-bearer")
+                    .AllowCustomFlow(OAuthGrantExchangeConsts.GRANT_TYPE)
                     .AllowClientCredentialsFlow()
                     .AllowHybridFlow()
                     .AllowRefreshTokenFlow();
