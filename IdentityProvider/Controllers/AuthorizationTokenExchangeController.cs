@@ -81,8 +81,6 @@ public class AuthorizationTokenExchangeController : Controller
         }
 
         // validate user exists
-        // TODO validate that Azure AD access token is a delegated token => must contain a scp claim and a oid claim
-
         var user = await _userManager.FindByNameAsync(name);
         if (user == null)
         {
