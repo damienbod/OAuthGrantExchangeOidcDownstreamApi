@@ -26,5 +26,6 @@ public class OauthTokenExchangeConfiguration
     [JsonPropertyName("AudienceForNewAccessToken")]
     public string AudienceForNewAccessToken { get; set; } = string.Empty;
 
-    public string IssuerForNewAccessToken { get; set; }
+    [JsonPropertyName("IssuerForNewAccessToken")]
+    public string IssuerForNewAccessToken { get; set; } = string.Empty;
 }
