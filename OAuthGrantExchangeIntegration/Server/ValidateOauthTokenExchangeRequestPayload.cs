@@ -7,7 +7,7 @@ namespace OAuthGrantExchangeIntegration.Server;
 
 public static class ValidateOauthTokenExchangeRequestPayload
 {
-    public static (bool Valid, string Reason, string error) IsValid(OauthTokenExchangePayload oauthTokenExchangePayload, OauthTokenExchangeConfiguration oauthTokenExchangeConfiguration)
+    public static (bool Valid, string Reason, string Error) IsValid(OauthTokenExchangePayload oauthTokenExchangePayload, OauthTokenExchangeConfiguration oauthTokenExchangeConfiguration)
     {
         if(!oauthTokenExchangePayload.grant_type.Equals(OAuthGrantExchangeConsts.GRANT_TYPE))
         {
