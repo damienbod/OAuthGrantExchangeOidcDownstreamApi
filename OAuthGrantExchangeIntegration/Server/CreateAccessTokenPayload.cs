@@ -21,6 +21,7 @@ public static class CreateDelegatedAccessTokenPayload
         var subject = new ClaimsIdentity(new[] {
                 new Claim("sub", payload.Sub),              
                 new Claim("scope", payload.Scope),
+                // https://datatracker.ietf.org/doc/html/rfc8693#name-act-actor-claim
                 new Claim("act", $"{{ \"sub\": \"{payload.OriginalClientId}\" }}", JsonClaimValueTypes.Json )
             });
 
