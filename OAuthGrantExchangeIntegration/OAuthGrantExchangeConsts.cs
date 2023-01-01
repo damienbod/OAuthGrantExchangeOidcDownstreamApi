@@ -1,4 +1,6 @@
-﻿namespace OAuthGrantExchangeIntegration;
+﻿using System.Text.Json.Serialization;
+
+namespace OAuthGrantExchangeIntegration;
 
 public class OAuthGrantExchangeConsts
 {
@@ -16,4 +18,14 @@ public class OAuthGrantExchangeConsts
     public const string ERROR_UNAUTHORIZED_CLIENT = "unauthorized_client";
     public const string ERROR_UNSUPPORTED_GRANT_TYPE = "unsupported_grant_type";
     public const string ERROR_INVALID_SCOPE = "invalid_scope";
+
+    public const string REQUEST_GRANT_TYPE = "grant_type";
+    public const string REQUEST_RESOURCE = "resource";
+    public const string REQUEST_AUDIENCE = "audience";
+    public const string REQUEST_SUBJECT_TOKEN_TYPE = "subject_token_type";
+    public const string REQUEST_SUBJECT_TOKEN = "subject_token";
+    public const string SCOPE = "scope";
+    public const string REQUEST_REQUESTED_TOKEN_TYPE = "requested_token_type";
+    public const string REQUEST_ACTOR_TOKEN = "actor_token";
+    public const string REQUEST_ACTOR_TOKEN_TYPE = "actor_token_type";
 }

@@ -7,22 +7,22 @@ namespace OAuthGrantExchangeIntegration;
 /// </summary>
 public class OauthTokenExchangePayload
 {
-    [JsonPropertyName("grant_type")]
+    [JsonPropertyName(OAuthGrantExchangeConsts.REQUEST_GRANT_TYPE)]
     public string grant_type {get;set;} = string.Empty;
 
-    [JsonPropertyName("resource")]
+    [JsonPropertyName(OAuthGrantExchangeConsts.REQUEST_RESOURCE)]
     public string? resource { get; set; }
 
-    [JsonPropertyName("audience")]
+    [JsonPropertyName(OAuthGrantExchangeConsts.REQUEST_AUDIENCE)]
     public string? audience { get; set; }
 
-    [JsonPropertyName("scope")]
+    [JsonPropertyName(OAuthGrantExchangeConsts.SCOPE)]
     public string? scope { get; set; }
 
-    [JsonPropertyName("requested_token_type")]
+    [JsonPropertyName(OAuthGrantExchangeConsts.REQUEST_REQUESTED_TOKEN_TYPE)]
     public string? requested_token_type { get; set; }
 
-    [JsonPropertyName("subject_token")]
+    [JsonPropertyName(OAuthGrantExchangeConsts.REQUEST_SUBJECT_TOKEN)]
     public string subject_token { get; set; } = string.Empty;
 
     /// <summary>
@@ -32,12 +32,12 @@ public class OauthTokenExchangePayload
     /// urn:ietf:params:oauth:token-type:saml1
     /// urn:ietf:params:oauth:token-type:saml2
     /// </summary>
-    [JsonPropertyName("subject_token_type")]
+    [JsonPropertyName(OAuthGrantExchangeConsts.REQUEST_SUBJECT_TOKEN_TYPE)]
     public string subject_token_type { get; set; } = string.Empty;
 
-    [JsonPropertyName("actor_token")]
+    [JsonPropertyName(OAuthGrantExchangeConsts.REQUEST_ACTOR_TOKEN)]
     public string? actor_token { get; set; }
 
-    [JsonPropertyName("actor_token_type")]
+    [JsonPropertyName(OAuthGrantExchangeConsts.REQUEST_ACTOR_TOKEN_TYPE)]
     public string actor_token_type { get; set; } = string.Empty;
 }

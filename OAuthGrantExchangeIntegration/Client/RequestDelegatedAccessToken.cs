@@ -63,11 +63,11 @@ public static class RequestDelegatedAccessToken
         // Content-Type: application/x-www-form-urlencoded
         var oauthTokenExchangeBody = new[]
         {
-            new KeyValuePair<string, string>("grant_type", OAuthGrantExchangeConsts.GRANT_TYPE),
-            new KeyValuePair<string, string>("audience", reqData.Audience),
-            new KeyValuePair<string, string>("subject_token_type", OAuthGrantExchangeConsts.TOKEN_TYPE_ACCESS_TOKEN),
-            new KeyValuePair<string, string>("subject_token", reqData.AccessToken),
-            new KeyValuePair<string, string>("scope", reqData.Scope)
+            new KeyValuePair<string, string>(OAuthGrantExchangeConsts.REQUEST_GRANT_TYPE, OAuthGrantExchangeConsts.GRANT_TYPE),
+            new KeyValuePair<string, string>(OAuthGrantExchangeConsts.REQUEST_AUDIENCE, reqData.Audience),
+            new KeyValuePair<string, string>(OAuthGrantExchangeConsts.REQUEST_SUBJECT_TOKEN_TYPE, OAuthGrantExchangeConsts.TOKEN_TYPE_ACCESS_TOKEN),
+            new KeyValuePair<string, string>(OAuthGrantExchangeConsts.REQUEST_SUBJECT_TOKEN, reqData.AccessToken),
+            new KeyValuePair<string, string>(OAuthGrantExchangeConsts.SCOPE, reqData.Scope)
 
             // new KeyValuePair<string, string>("resource", "--optional--")
             // new KeyValuePair<string, string>("requested_token_type", "--optional--")
