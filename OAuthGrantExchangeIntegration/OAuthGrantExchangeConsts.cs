@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace OAuthGrantExchangeIntegration;
+﻿namespace OAuthGrantExchangeIntegration;
 
 public class OAuthGrantExchangeConsts
 {
@@ -41,6 +39,8 @@ public class OAuthGrantExchangeConsts
     public const string RESPONSE_ERROR = "error";
     public const string RESPONSE_ERROR_DESCRIPTION = "error_description";
     public const string RESPONSE_ERROR_URI = "error_uri";
+
+    // extra claims in error response but not in spec
     public const string RESPONSE_ERROR_CODES = "error_codes";
     public const string RESPONSE_ERROR_TIMESTAMP = "timestamp";
     public const string RESPONSE_ERROR_TRACE_ID = "trace_id";
