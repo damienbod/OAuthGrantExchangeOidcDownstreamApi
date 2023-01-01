@@ -1,4 +1,6 @@
-﻿namespace OAuthGrantExchangeIntegration;
+﻿using System.Text.Json.Serialization;
+
+namespace OAuthGrantExchangeIntegration;
 
 public class OAuthGrantExchangeConsts
 {
@@ -34,4 +36,15 @@ public class OAuthGrantExchangeConsts
     public const string RESPONSE_TOKEN_TYPE = "token_type";
     public const string RESPONSE_EXPIRES_IN = "expires_in";
     public const string RESPONSE_REFRESH_TOKEN = "refresh_token";
+
+    // https://www.rfc-editor.org/rfc/rfc6749#section-5.2
+    public const string RESPONSE_ERROR = "error";
+    public const string RESPONSE_ERROR_DESCRIPTION = "error_description";
+    public const string RESPONSE_ERROR_URI = "error_uri";
+    public const string RESPONSE_ERROR_CODES = "error_codes";
+    public const string RESPONSE_ERROR_TIMESTAMP = "timestamp";
+    public const string RESPONSE_ERROR_TRACE_ID = "trace_id";
+    public const string RESPONSE_ERROR_CORRELATION_ID = "correlation_id";
+    public const string RESPONSE_ERROR_CLAIMS = "claims";
+
 }
