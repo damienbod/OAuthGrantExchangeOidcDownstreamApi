@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace OAuthGrantExchangeIntegration;
+﻿namespace OAuthGrantExchangeIntegration;
 
 public class OAuthGrantExchangeConsts
 {
@@ -29,4 +27,11 @@ public class OAuthGrantExchangeConsts
     public const string REQUEST_ACTOR_TOKEN = "actor_token";
     public const string REQUEST_ACTOR_TOKEN_TYPE = "actor_token_type";
     public const string SCOPE = "scope";
+
+    // https://datatracker.ietf.org/doc/html/rfc8693#name-response
+    public const string RESPONSE_ACCESS_TOKEN = "access_token";
+    public const string RESPONSE_ISSUED_TOKEN_TYPE = "issued_token_type";
+    public const string RESPONSE_TOKEN_TYPE = "token_type";
+    public const string RESPONSE_EXPIRES_IN = "expires_in";
+    public const string RESPONSE_REFRESH_TOKEN = "refresh_token";
 }

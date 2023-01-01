@@ -4,7 +4,7 @@ namespace OAuthGrantExchangeIntegration;
 
 public class OauthTokenExchangeSuccessResponse
 {
-    [JsonPropertyName("access_token")]
+    [JsonPropertyName(OAuthGrantExchangeConsts.RESPONSE_ACCESS_TOKEN)]
     public string access_token { get; set; } = string.Empty;
 
     /// <summary>
@@ -14,18 +14,18 @@ public class OauthTokenExchangeSuccessResponse
     /// urn:ietf:params:oauth:token-type:saml1
     /// urn:ietf:params:oauth:token-type:saml2
     /// </summary>
-    [JsonPropertyName("issued_token_type")]
+    [JsonPropertyName(OAuthGrantExchangeConsts.RESPONSE_ISSUED_TOKEN_TYPE)]
     public string issued_token_type { get; set; } = string.Empty;
 
-    [JsonPropertyName("token_type")]
+    [JsonPropertyName(OAuthGrantExchangeConsts.RESPONSE_TOKEN_TYPE)]
     public string token_type { get; set; } = string.Empty;
 
-    [JsonPropertyName("expires_in")]
+    [JsonPropertyName(OAuthGrantExchangeConsts.RESPONSE_EXPIRES_IN)]
     public int expires_in { get; set; }
 
-    [JsonPropertyName("scope")]
+    [JsonPropertyName(OAuthGrantExchangeConsts.SCOPE)]
     public string? scope { get; set; }
 
-    [JsonPropertyName("refresh_token")]
+    [JsonPropertyName(OAuthGrantExchangeConsts.RESPONSE_REFRESH_TOKEN)]
     public string? refresh_token { get; set; }
 }
