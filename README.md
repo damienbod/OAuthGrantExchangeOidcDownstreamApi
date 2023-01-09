@@ -4,8 +4,9 @@
 
 OAuth 2.0 Token Exchange delegated implementation with Azure AD and OpenIddict
 
-[Implement the OAUTH 2.0 Token Exchange delegated flow between an Azure AD API and an API protected using OpenIddict](https://damienbod.com/2023/01/09/implement-the-oauth-2-0-token-exchange-delegated-flow-between-an-azure-ad-api-and-an-api-protected-using-openiddict/
+[blog](https://damienbod.com/2023/01/09/implement-the-oauth-2-0-token-exchange-delegated-flow-between-an-azure-ad-api-and-an-api-protected-using-openiddict/
 )
+
 ![OAuth 2.0 Token Exchange](https://github.com/damienbod/OAuthGrantExchangeOidcDownstreamApi/blob/main/images/oauth_token_exchaneg_aad_openiddict_01.png)
 
 ## Links
