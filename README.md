@@ -11,6 +11,8 @@ OAuth 2.0 Token Exchange delegated implementation with Azure AD and OpenIddict
 
 ## History
 
+2023-04-28 Updated nuget packages 
+
 2023-01-09 Updated nuget packages 
 
 ## Links
