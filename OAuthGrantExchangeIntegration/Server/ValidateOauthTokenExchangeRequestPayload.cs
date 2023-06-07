@@ -93,38 +93,20 @@ public static class ValidateOauthTokenExchangeRequestPayload
 
     public static string GetPreferredUserName(ClaimsPrincipal claimsPrincipal)
     {
-        string preferredUsername = string.Empty;
         var preferred_username = claimsPrincipal.Claims.FirstOrDefault(t => t.Type == "preferred_username");
-        if (preferred_username != null)
-        {
-            preferredUsername = preferred_username.Value;
-        }
-
-        return preferredUsername;
+        return preferred_username?.Value ?? string.Empty;
     }
 
     public static string GetAzpacr(ClaimsPrincipal claimsPrincipal)
     {
-        string azpacr = string.Empty;
         var azpacrClaim = claimsPrincipal.Claims.FirstOrDefault(t => t.Type == "azpacr");
-        if (azpacrClaim != null)
-        {
-            azpacr = azpacrClaim.Value;
-        }
-
-        return azpacr;
+        return azpacrClaim?.Value ?? string.Empty;
     }
 
     public static string GetAzp(ClaimsPrincipal claimsPrincipal)
     {
-        string azp = string.Empty;
         var azpClaim = claimsPrincipal.Claims.FirstOrDefault(t => t.Type == "azp");
-        if (azpClaim != null)
-        {
-            azp = azpClaim.Value;
-        }
-
-        return azp;
+        return azpClaim?.Value ?? string.Empty;
     }
 
     public static bool IsEmailValid(string email)

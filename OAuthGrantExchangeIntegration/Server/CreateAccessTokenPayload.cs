@@ -31,14 +31,11 @@ public static class CreateDelegatedAccessTokenPayload
             var azp = ValidateOauthTokenExchangeRequestPayload.GetAzp(payload.ClaimsPrincipal);
             var azpacr = ValidateOauthTokenExchangeRequestPayload.GetAzpacr(payload.ClaimsPrincipal);
 
-            if(!string.IsNullOrEmpty(name))
-                subject.AddClaim(new Claim("name", name));
+            if(!string.IsNullOrEmpty(name)) subject.AddClaim(new Claim("name", name));
 
-            if (!string.IsNullOrEmpty(name))
-                subject.AddClaim(new Claim("azp", azp));
+            if (!string.IsNullOrEmpty(azp)) subject.AddClaim(new Claim("azp", azp));
 
-            if (!string.IsNullOrEmpty(name))
-                subject.AddClaim(new Claim("azpacr", azpacr));
+            if (!string.IsNullOrEmpty(azpacr)) subject.AddClaim(new Claim("azpacr", azpacr));
         }
 
         var tokenHandler = new JwtSecurityTokenHandler();
