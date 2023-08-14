@@ -1,43 +1,42 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Quartz;
-using OpeniddictServer.Data;
-using static OpenIddict.Abstractions.OpenIddictConstants;
-using Microsoft.IdentityModel.Logging;
 using Fido2Identity;
 using Fido2NetLib;
+using idunno.Authentication.Basic;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Logging;
+using OAuthGrantExchangeIntegration.Server;
+using OAuthGrantExchangeIntegration;
+using OpeniddictServer.Data;
+using Quartz;
+using Serilog;
+using System.Configuration;
+using System.IdentityModel.Tokens.Jwt;
+using static OpenIddict.Abstractions.OpenIddictConstants;
+using Microsoft.Extensions.Options;
+using System.Security.Claims;
 using StsServerIdentity.Services.Certificate;
 using System.Security.Cryptography.X509Certificates;
-using OAuthGrantExchangeIntegration.Server;
-using idunno.Authentication.Basic;
-using System.Security.Claims;
-using Microsoft.Extensions.Options;
-using OAuthGrantExchangeIntegration;
 
 namespace OpeniddictServer;
 
-public class Startup
+internal static class HostingExtensions
 {
-    private readonly IWebHostEnvironment _environment;
-    public IConfiguration Configuration { get; }
-
-    public Startup(IConfiguration configuration, IWebHostEnvironment env)
+    private static IWebHostEnvironment? _env;
+    public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
-        Configuration = configuration;
-        _environment = env;
-    }
+        var services = builder.Services;
+        var configuration = builder.Configuration;
+        _env = builder.Environment;
 
-    public void ConfigureServices(IServiceCollection services)
-    {
         services.AddControllersWithViews();
         services.AddRazorPages();
 
-        services.Configure<OauthTokenExchangeConfiguration>(Configuration.GetSection("TokenExchangeConfiguration"));
+        services.Configure<OauthTokenExchangeConfiguration>(configuration.GetSection("TokenExchangeConfiguration"));
 
         services.AddDbContext<ApplicationDbContext>(options =>
         {
             // Configure the context to use Microsoft SQL Server.
-            options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+            options.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
 
             // Register the entity sets needed by OpenIddict.
             // Note: use the generic overload if you need
@@ -53,7 +52,7 @@ public class Startup
           .AddDefaultUI()
           .AddTokenProvider<Fido2UserTwoFactorTokenProvider>("FIDO2");
 
-        services.Configure<Fido2Configuration>(Configuration.GetSection("fido2"));
+        services.Configure<Fido2Configuration>(configuration.GetSection("fido2"));
         services.AddScoped<Fido2Store>();
 
         services.AddDistributedMemoryCache();
@@ -111,7 +110,7 @@ public class Startup
         // Register the Quartz.NET service and configure it to block shutdown until jobs are complete.
         services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
 
-        var (ActiveCertificate, SecondaryCertificate) = GetCertificates(_environment, Configuration)
+        var (ActiveCertificate, SecondaryCertificate) = GetCertificates(_env, configuration)
             .GetAwaiter().GetResult();
 
         services.AddOpenIddict()
@@ -186,9 +185,9 @@ public class Startup
                     OnValidateCredentials = context =>
                     {
                         var config = context.HttpContext.RequestServices.GetService<IOptions<OauthTokenExchangeConfiguration>>();
-                        
-                        if(ValidateBasicAuthentication.IsValid(context.Username, context.Password, config.Value))
-                        { 
+
+                        if (ValidateBasicAuthentication.IsValid(context.Username, context.Password, config.Value))
+                        {
                             var claims = new[]
                             {
                                 new Claim( ClaimTypes.NameIdentifier, context.Username, ClaimValueTypes.String, context.Options.ClaimsIssuer),
@@ -207,24 +206,25 @@ public class Startup
         // Register the worker responsible of seeding the database.
         // Note: in a real world application, this step should be part of a setup script.
         services.AddHostedService<Worker>();
-    }
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        return builder.Build();
+    }
+    
+    public static WebApplication ConfigurePipeline(this WebApplication app)
     {
         IdentityModelEventSource.ShowPII = true;
+        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-        if (env.IsDevelopment())
+        app.UseSerilogRequestLogging();
+
+        if (_env!.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
-            app.UseMigrationsEndPoint();
         }
         else
         {
-            app.UseStatusCodePagesWithReExecute("~/error");
-            //app.UseExceptionHandler("~/error");
-
-            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            //app.UseHsts();
+            app.UseExceptionHandler("/Error");
+            app.UseHsts();
         }
 
         app.UseCors("AllowAllOrigins");
@@ -239,16 +239,15 @@ public class Startup
 
         app.UseSession();
 
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-            endpoints.MapDefaultControllerRoute();
-            endpoints.MapRazorPages();
-        });
+        app.MapControllers();
+        app.MapDefaultControllerRoute();
+        app.MapRazorPages();
+
+        return app;
     }
 
     public static async Task<(X509Certificate2 ActiveCertificate, X509Certificate2 SecondaryCertificate)> GetCertificates(
-        IWebHostEnvironment environment, IConfiguration configuration)
+       IWebHostEnvironment environment, IConfiguration configuration)
     {
         var certificateConfiguration = new CertificateConfiguration
         {
