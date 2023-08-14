@@ -1,24 +1,22 @@
-﻿using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.OpenApi.Models;
 using OpenIddict.Validation.AspNetCore;
+using Serilog;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace DownstreamOpenIddictWebApi;
 
-public class Startup
+internal static class HostingExtensions
 {
-
-    public Startup(IConfiguration configuration)
+    private static IWebHostEnvironment? _env;
+    public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
-        Configuration = configuration;
-    }
+        var services = builder.Services;
+        var configuration = builder.Configuration;
+        _env = builder.Environment;
 
-    public IConfiguration Configuration { get; }
-
-    public void ConfigureServices(IServiceCollection services)
-    {
         services.AddAuthentication(options =>
         {
             options.DefaultScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
@@ -97,14 +95,18 @@ public class Startup
         });
 
         services.AddControllers();
-    }
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        return builder.Build();
+    }
+    
+    public static WebApplication ConfigurePipeline(this WebApplication app)
     {
         IdentityModelEventSource.ShowPII = true;
         JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-        if (env.IsDevelopment())
+        app.UseSerilogRequestLogging();
+
+        if (_env!.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
         }
@@ -126,9 +128,8 @@ public class Startup
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers().RequireAuthorization();
-        });
+        app.MapControllers().RequireAuthorization();
+
+        return app;
     }
 }
