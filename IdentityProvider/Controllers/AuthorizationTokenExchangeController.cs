@@ -88,7 +88,7 @@ public class AuthorizationTokenExchangeController : Controller
         }
 
         // use data and return new access token
-        var (ActiveCertificate, _) = await Startup.GetCertificates(_environment, _configuration);
+        var (ActiveCertificate, _) = await HostingExtensions.GetCertificates(_environment, _configuration);
 
         var tokenData = new CreateDelegatedAccessTokenPayloadModel
         {
