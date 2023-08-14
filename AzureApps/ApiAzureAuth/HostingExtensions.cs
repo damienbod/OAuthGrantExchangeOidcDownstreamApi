@@ -1,35 +1,33 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Identity.Web;
-using Microsoft.OpenApi.Models;
-using System.IdentityModel.Tokens.Jwt;
-using ApiAzureAuth;
 using Microsoft.IdentityModel.Logging;
+using Microsoft.OpenApi.Models;
+using Serilog;
+using System.IdentityModel.Tokens.Jwt;
 
-namespace DownstreamOpenIddictWebApi;
+namespace ApiAzureAuth;
 
-public class Startup
+internal static class HostingExtensions
 {
-    public Startup(IConfiguration configuration)
+    private static IWebHostEnvironment? _env;
+    public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
-        Configuration = configuration;
-    }
+        var services = builder.Services;
+        var configuration = builder.Configuration;
+        _env = builder.Environment;
 
-    public IConfiguration Configuration { get; }
-
-    public void ConfigureServices(IServiceCollection services)
-    {
         services.AddTransient<ApiService>();
         services.AddTransient<ApiTokenCacheClient>();
         services.AddHttpClient();
-        services.Configure<DownstreamApi>(Configuration.GetSection("DownstreamApi"));
+        services.Configure<DownstreamApi>(configuration.GetSection("DownstreamApi"));
 
         services.AddOptions();
 
         services.AddDistributedMemoryCache();
 
-        services.AddMicrosoftIdentityWebApiAuthentication(Configuration, "AzureAd")
+        services.AddMicrosoftIdentityWebApiAuthentication(configuration, "AzureAd")
             .EnableTokenAcquisitionToCallDownstreamApi()
             .AddDistributedTokenCaches();
 
@@ -78,14 +76,18 @@ public class Startup
                 .Build();
             options.Filters.Add(new AuthorizeFilter(policy));
         });
-    }
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        return builder.Build();
+    }
+    
+    public static WebApplication ConfigurePipeline(this WebApplication app)
     {
         IdentityModelEventSource.ShowPII = true;
         JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-        if (env.IsDevelopment())
+        app.UseSerilogRequestLogging();
+
+        if (_env!.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
         }
@@ -109,9 +111,8 @@ public class Startup
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-        });
+        app.MapControllers();
+
+        return app;
     }
 }
