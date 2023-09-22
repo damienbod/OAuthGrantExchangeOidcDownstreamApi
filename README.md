@@ -4,7 +4,7 @@
 
 ## Blogs
 
-- [OAuth 2.0 Token Exchange delegated implementation with Azure AD and OpenIddict](https://damienbod.com/2023/01/09/implement-the-oauth-2-0-token-exchange-delegated-flow-between-an-azure-ad-api-and-an-api-protected-using-openiddict/)
+- [OAuth 2.0 Token Exchange delegated implementation with Microsoft Entra ID and OpenIddict](https://damienbod.com/2023/01/09/implement-the-oauth-2-0-token-exchange-delegated-flow-between-an-azure-ad-api-and-an-api-protected-using-openiddict/)
 
 - [Basic Authentication in ASP.NET Core](https://damienbod.com/2023/01/23/basic-authentication-in-asp-net-core/)
 
