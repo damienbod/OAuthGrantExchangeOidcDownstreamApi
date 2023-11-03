@@ -12,13 +12,11 @@
 
 ## History
 
-2023-09-22 Updated nuget packages 
-
-2023-08-14 Updated nuget packages 
-
-2023-04-28 Updated nuget packages 
-
-2023-01-09 Updated nuget packages 
+- 2023-11-03 Updated nuget packages
+- 2023-09-22 Updated nuget packages 
+- 2023-08-14 Updated nuget packages 
+- 2023-04-28 Updated nuget packages 
+- 2023-01-09 Updated nuget packages 
 
 ## Links
 
