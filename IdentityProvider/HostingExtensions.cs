@@ -20,13 +20,11 @@ namespace OpeniddictServer;
 
 internal static class HostingExtensions
 {
-    private static IWebHostEnvironment? _env;
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
         var services = builder.Services;
         var configuration = builder.Configuration;
-        _env = builder.Environment;
-
+  
         services.AddControllersWithViews();
         services.AddRazorPages();
 
@@ -109,7 +107,7 @@ internal static class HostingExtensions
         // Register the Quartz.NET service and configure it to block shutdown until jobs are complete.
         services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
 
-        var (ActiveCertificate, SecondaryCertificate) = GetCertificates(_env, configuration)
+        var (ActiveCertificate, SecondaryCertificate) = GetCertificates(builder.Environment, configuration)
             .GetAwaiter().GetResult();
 
         services.AddOpenIddict()
@@ -216,7 +214,7 @@ internal static class HostingExtensions
 
         app.UseSerilogRequestLogging();
 
-        if (_env!.IsDevelopment())
+        if (app.Environment!.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
         }
