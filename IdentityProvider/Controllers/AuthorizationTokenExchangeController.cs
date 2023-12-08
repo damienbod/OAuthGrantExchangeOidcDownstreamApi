@@ -23,7 +23,8 @@ public class AuthorizationTokenExchangeController : Controller
     private readonly UserManager<ApplicationUser> _userManager;
 
     public AuthorizationTokenExchangeController(IConfiguration configuration, 
-        IWebHostEnvironment env, IOptions<OauthTokenExchangeConfiguration> oauthTokenExchangeConfigurationConfiguration,
+        IWebHostEnvironment env, 
+        IOptions<OauthTokenExchangeConfiguration> oauthTokenExchangeConfigurationConfiguration,
         UserManager<ApplicationUser> userManager,
         ILoggerFactory loggerFactory)
     {
