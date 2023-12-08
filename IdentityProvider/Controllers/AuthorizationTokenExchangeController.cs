@@ -64,7 +64,7 @@ public class AuthorizationTokenExchangeController : Controller
             return UnauthorizedValidationTokenAndSignatureFailed(oauthTokenExchangePayload, accessTokenValidationResult);
         }
 
-        // get claims from aad token and re use in OpenIddict token
+        // get claims from Microsoft Entra ID token and re use in OpenIddict token
         var claimsPrincipal = accessTokenValidationResult.ClaimsPrincipal;
 
         var isDelegatedToken = ValidateOauthTokenExchangeRequestPayload.IsDelegatedAadAccessToken(claimsPrincipal);
