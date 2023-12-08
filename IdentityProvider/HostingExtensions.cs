@@ -9,13 +9,12 @@ using OAuthGrantExchangeIntegration;
 using OpeniddictServer.Data;
 using Quartz;
 using Serilog;
-using System.Configuration;
-using System.IdentityModel.Tokens.Jwt;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using StsServerIdentity.Services.Certificate;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace OpeniddictServer;
 
@@ -213,7 +212,7 @@ internal static class HostingExtensions
     public static WebApplication ConfigurePipeline(this WebApplication app)
     {
         IdentityModelEventSource.ShowPII = true;
-        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+        JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
         app.UseSerilogRequestLogging();
 
