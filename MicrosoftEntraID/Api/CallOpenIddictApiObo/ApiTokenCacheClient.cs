@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using OAuthGrantExchangeIntegration.Client;
 using System.Text.Json;
 
-namespace ApiAzureAuth;
+namespace EntraIdApi;
 
 public class ApiTokenCacheClient
 {

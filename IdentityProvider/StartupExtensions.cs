@@ -9,25 +9,22 @@ using OAuthGrantExchangeIntegration;
 using OpeniddictServer.Data;
 using Quartz;
 using Serilog;
-using System.Configuration;
-using System.IdentityModel.Tokens.Jwt;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using StsServerIdentity.Services.Certificate;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace OpeniddictServer;
 
-internal static class HostingExtensions
+internal static class StartupExtensions
 {
-    private static IWebHostEnvironment? _env;
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
         var services = builder.Services;
         var configuration = builder.Configuration;
-        _env = builder.Environment;
-
+  
         services.AddControllersWithViews();
         services.AddRazorPages();
 
@@ -110,7 +107,7 @@ internal static class HostingExtensions
         // Register the Quartz.NET service and configure it to block shutdown until jobs are complete.
         services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
 
-        var (ActiveCertificate, SecondaryCertificate) = GetCertificates(_env, configuration)
+        var (ActiveCertificate, SecondaryCertificate) = GetCertificates(builder.Environment, configuration)
             .GetAwaiter().GetResult();
 
         services.AddOpenIddict()
@@ -213,11 +210,11 @@ internal static class HostingExtensions
     public static WebApplication ConfigurePipeline(this WebApplication app)
     {
         IdentityModelEventSource.ShowPII = true;
-        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+        JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
         app.UseSerilogRequestLogging();
 
-        if (_env!.IsDevelopment())
+        if (app.Environment!.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
         }

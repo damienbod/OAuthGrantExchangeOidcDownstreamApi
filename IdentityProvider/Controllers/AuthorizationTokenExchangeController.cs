@@ -23,7 +23,8 @@ public class AuthorizationTokenExchangeController : Controller
     private readonly UserManager<ApplicationUser> _userManager;
 
     public AuthorizationTokenExchangeController(IConfiguration configuration, 
-        IWebHostEnvironment env, IOptions<OauthTokenExchangeConfiguration> oauthTokenExchangeConfigurationConfiguration,
+        IWebHostEnvironment env, 
+        IOptions<OauthTokenExchangeConfiguration> oauthTokenExchangeConfigurationConfiguration,
         UserManager<ApplicationUser> userManager,
         ILoggerFactory loggerFactory)
     {
@@ -63,7 +64,7 @@ public class AuthorizationTokenExchangeController : Controller
             return UnauthorizedValidationTokenAndSignatureFailed(oauthTokenExchangePayload, accessTokenValidationResult);
         }
 
-        // get claims from aad token and re use in OpenIddict token
+        // get claims from Microsoft Entra ID token and re use in OpenIddict token
         var claimsPrincipal = accessTokenValidationResult.ClaimsPrincipal;
 
         var isDelegatedToken = ValidateOauthTokenExchangeRequestPayload.IsDelegatedAadAccessToken(claimsPrincipal);
@@ -88,7 +89,7 @@ public class AuthorizationTokenExchangeController : Controller
         }
 
         // use data and return new access token
-        var (ActiveCertificate, _) = await HostingExtensions.GetCertificates(_environment, _configuration);
+        var (ActiveCertificate, _) = await StartupExtensions.GetCertificates(_environment, _configuration);
 
         var tokenData = new CreateDelegatedAccessTokenPayloadModel
         {
