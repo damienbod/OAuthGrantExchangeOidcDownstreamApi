@@ -10,13 +10,11 @@ namespace DownstreamOpenIddictWebApi;
 
 internal static class StartupExtensions
 {
-    private static IWebHostEnvironment? _env;
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
         var services = builder.Services;
         var configuration = builder.Configuration;
-        _env = builder.Environment;
-
+ 
         services.AddAuthentication(options =>
         {
             options.DefaultScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
@@ -106,7 +104,7 @@ internal static class StartupExtensions
 
         app.UseSerilogRequestLogging();
 
-        if (_env!.IsDevelopment())
+        if (app.Environment!.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
         }
