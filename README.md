@@ -8,7 +8,7 @@
 
 - [Basic Authentication in ASP.NET Core](https://damienbod.com/2023/01/23/basic-authentication-in-asp-net-core/)
 
-![OAuth 2.0 Token Exchange](https://github.com/damienbod/OAuthGrantExchangeOidcDownstreamApi/blob/main/images/oauth_token_exchaneg_aad_openiddict_01.png)
+![OAuth 2.0 Token Exchange](https://github.com/damienbod/OAuthGrantExchangeOidcDownstreamApi/blob/main/images/oauth_token_exchange_aad_openiddict_02.png)
 
 ## History
 
