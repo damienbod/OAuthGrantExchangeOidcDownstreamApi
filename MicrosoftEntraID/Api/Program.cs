@@ -1,4 +1,4 @@
-﻿using ApiAzureAuth;
+﻿using EntraIdApi;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()

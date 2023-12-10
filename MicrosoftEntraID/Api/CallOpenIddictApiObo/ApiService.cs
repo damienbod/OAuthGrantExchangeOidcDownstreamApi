@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Options;
 using System.Text.Json;
 
-namespace ApiAzureAuth;
+namespace EntraIdApi;
 
 public class ApiService
 {

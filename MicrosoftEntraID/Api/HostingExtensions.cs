@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Logging;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
-namespace ApiAzureAuth;
+namespace EntraIdApi;
 
 internal static class HostingExtensions
 {

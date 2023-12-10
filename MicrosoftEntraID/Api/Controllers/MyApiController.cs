@@ -4,7 +4,7 @@ using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.Resource;
 using Microsoft.Net.Http.Headers;
 
-namespace ApiAzureAuth.Controllers
+namespace EntraIdApi.Controllers
 {
     [Authorize]
     [AuthorizeForScopes(Scopes = new string[] { "api://72286b8d-5010-4632-9cea-e69e565a5517/user_impersonation" })]
