@@ -8,7 +8,7 @@ using Serilog;
 
 namespace DownstreamOpenIddictWebApi;
 
-internal static class HostingExtensions
+internal static class StartupExtensions
 {
     private static IWebHostEnvironment? _env;
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)

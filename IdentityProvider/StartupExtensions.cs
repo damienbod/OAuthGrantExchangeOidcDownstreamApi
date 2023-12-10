@@ -18,7 +18,7 @@ using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace OpeniddictServer;
 
-internal static class HostingExtensions
+internal static class StartupExtensions
 {
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
