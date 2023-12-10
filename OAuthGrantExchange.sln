@@ -17,9 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DownstreamApi", "Downstream
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OAuthGrantExchangeIntegration", "OAuthGrantExchangeIntegration\OAuthGrantExchangeIntegration.csproj", "{AE6E582D-9EDF-4DB9-8353-3672545C257E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiAzureAuth", "MicrosoftEntraID\ApiAzureAuth\ApiAzureAuth.csproj", "{135C637B-3D28-4D20-8EEB-69FEE2024703}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntraIdApi", "MicrosoftEntraID\Api\EntraIdApi.csproj", "{135C637B-3D28-4D20-8EEB-69FEE2024703}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RazorAppAzureAuth", "MicrosoftEntraID\RazorAppAzureAuth\RazorAppAzureAuth.csproj", "{7419C4BA-63BF-4763-9BDF-565065E46A90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntraIdRazorPage", "MicrosoftEntraID\RazorPage\EntraIdRazorPage.csproj", "{7419C4BA-63BF-4763-9BDF-565065E46A90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
