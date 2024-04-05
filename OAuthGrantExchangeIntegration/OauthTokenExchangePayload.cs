@@ -8,7 +8,7 @@ namespace OAuthGrantExchangeIntegration;
 public class OauthTokenExchangePayload
 {
     [JsonPropertyName(OAuthGrantExchangeConsts.REQUEST_GRANT_TYPE)]
-    public string grant_type {get;set;} = string.Empty;
+    public string grant_type { get; set; } = string.Empty;
 
     [JsonPropertyName(OAuthGrantExchangeConsts.REQUEST_RESOURCE)]
     public string? resource { get; set; }

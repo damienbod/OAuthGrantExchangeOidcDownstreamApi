@@ -54,16 +54,16 @@ public class ApiTokenCacheClient
         _logger.LogDebug("GetApiToken new from STS for {api_name}", clientId);
 
         // add
-        var newAccessToken = await GetApiTokenOauthGrantTokenExchangeAad( clientId, audience,  scope,  clientSecret, aadAccessToken);
+        var newAccessToken = await GetApiTokenOauthGrantTokenExchangeAad(clientId, audience, scope, clientSecret, aadAccessToken);
         AddToCache(clientId, newAccessToken);
 
         return newAccessToken.AccessToken;
     }
 
-    private async Task<AccessTokenItem> GetApiTokenOauthGrantTokenExchangeAad(string clientId, 
+    private async Task<AccessTokenItem> GetApiTokenOauthGrantTokenExchangeAad(string clientId,
         string audience,
-        string scope, 
-        string clientSecret, 
+        string scope,
+        string clientSecret,
         string aadAccessToken)
     {
         var tokenExchangeHttpClient = _httpClientFactory.CreateClient();

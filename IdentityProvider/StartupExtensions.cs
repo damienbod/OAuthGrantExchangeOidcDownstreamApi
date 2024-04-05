@@ -3,18 +3,18 @@ using Fido2NetLib;
 using idunno.Authentication.Basic;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Logging;
-using OAuthGrantExchangeIntegration.Server;
 using OAuthGrantExchangeIntegration;
+using OAuthGrantExchangeIntegration.Server;
 using OpeniddictServer.Data;
 using Quartz;
 using Serilog;
-using static OpenIddict.Abstractions.OpenIddictConstants;
-using Microsoft.Extensions.Options;
-using System.Security.Claims;
 using StsServerIdentity.Services.Certificate;
+using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
-using Microsoft.IdentityModel.JsonWebTokens;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace OpeniddictServer;
 
@@ -24,7 +24,7 @@ internal static class StartupExtensions
     {
         var services = builder.Services;
         var configuration = builder.Configuration;
-  
+
         services.AddControllersWithViews();
         services.AddRazorPages();
 
@@ -84,7 +84,6 @@ internal static class StartupExtensions
         // (like pruning orphaned authorizations/tokens from the database) at regular intervals.
         services.AddQuartz(options =>
         {
-            options.UseMicrosoftDependencyInjectionJobFactory();
             options.UseSimpleTypeLoader();
             options.UseInMemoryStore();
         });
@@ -206,7 +205,7 @@ internal static class StartupExtensions
 
         return builder.Build();
     }
-    
+
     public static WebApplication ConfigurePipeline(this WebApplication app)
     {
         IdentityModelEventSource.ShowPII = true;
@@ -257,7 +256,7 @@ internal static class StartupExtensions
             //CertificateThumbprint = configuration["CertificateThumbprint"],
 
             // development certificate
-            DevelopmentCertificatePfx = Path.Combine(environment.ContentRootPath, "sts_dev_cert.pfx"),
+            DevelopmentCertificatePfx = Path.Combine(environment.ContentRootPath, "certs/dev_localhost.pfx"),
             DevelopmentCertificatePassword = "1234" //configuration["DevelopmentCertificatePassword"] //"1234",
         };
 
