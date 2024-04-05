@@ -9,7 +9,7 @@ public static class ValidateOauthTokenExchangeRequestPayload
 {
     public static (bool Valid, string Reason, string Error) IsValid(OauthTokenExchangePayload oauthTokenExchangePayload, OauthTokenExchangeConfiguration oauthTokenExchangeConfiguration)
     {
-        if(!oauthTokenExchangePayload.grant_type.Equals(OAuthGrantExchangeConsts.GRANT_TYPE))
+        if (!oauthTokenExchangePayload.grant_type.Equals(OAuthGrantExchangeConsts.GRANT_TYPE))
         {
             return (false, $"grant_type parameter has an incorrect value, expected {OAuthGrantExchangeConsts.GRANT_TYPE}",
                 OAuthGrantExchangeConsts.ERROR_UNSUPPORTED_GRANT_TYPE);
@@ -37,8 +37,8 @@ public static class ValidateOauthTokenExchangeRequestPayload
     }
 
     public static (bool Valid, string Reason, ClaimsPrincipal? ClaimsPrincipal) ValidateTokenAndSignature(
-        string jwtToken, 
-        OauthTokenExchangeConfiguration oboConfiguration, 
+        string jwtToken,
+        OauthTokenExchangeConfiguration oboConfiguration,
         ICollection<SecurityKey> signingKeys)
     {
         try
@@ -53,7 +53,7 @@ public static class ValidateOauthTokenExchangeRequestPayload
                 IssuerSigningKeys = signingKeys,
                 ValidateIssuer = true,
                 ValidIssuer = oboConfiguration.AccessTokenAuthority,
-                ValidateAudience = true, 
+                ValidateAudience = true,
                 ValidAudience = oboConfiguration.AccessTokenAudience
             };
 

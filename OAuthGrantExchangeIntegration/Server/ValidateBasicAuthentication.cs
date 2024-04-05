@@ -2,9 +2,9 @@
 
 public static class ValidateBasicAuthentication
 {
-    public static bool  IsValid(string clientId, string clientSecret, OauthTokenExchangeConfiguration oauthTokenExchangeConfiguration)
+    public static bool IsValid(string clientId, string clientSecret, OauthTokenExchangeConfiguration oauthTokenExchangeConfiguration)
     {
-        if(!clientId.Equals(oauthTokenExchangeConfiguration.ClientId))
+        if (!clientId.Equals(oauthTokenExchangeConfiguration.ClientId))
         {
             return false;
         };

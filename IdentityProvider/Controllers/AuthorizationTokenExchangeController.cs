@@ -1,16 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+﻿using idunno.Authentication.Basic;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Protocols;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using OAuthGrantExchangeIntegration;
 using OAuthGrantExchangeIntegration.Server;
 using OpeniddictServer;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Logging;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
 using OpeniddictServer.Data;
-using Microsoft.AspNetCore.Authorization;
-using idunno.Authentication.Basic;
+using System.Security.Claims;
 
 namespace IdentityProvider.Controllers;
 
@@ -22,8 +22,8 @@ public class AuthorizationTokenExchangeController : Controller
     private readonly ILogger<AuthorizationTokenExchangeController> _logger;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public AuthorizationTokenExchangeController(IConfiguration configuration, 
-        IWebHostEnvironment env, 
+    public AuthorizationTokenExchangeController(IConfiguration configuration,
+        IWebHostEnvironment env,
         IOptions<OauthTokenExchangeConfiguration> oauthTokenExchangeConfigurationConfiguration,
         UserManager<ApplicationUser> userManager,
         ILoggerFactory loggerFactory)
@@ -31,7 +31,7 @@ public class AuthorizationTokenExchangeController : Controller
         _configuration = configuration;
         _environment = env;
         _oauthTokenExchangeConfigurationConfiguration = oauthTokenExchangeConfigurationConfiguration.Value;
-        _userManager= userManager;
+        _userManager = userManager;
         _logger = loggerFactory.CreateLogger<AuthorizationTokenExchangeController>();
     }
 
@@ -42,24 +42,24 @@ public class AuthorizationTokenExchangeController : Controller
         var (Valid, Reason, Error) = ValidateOauthTokenExchangeRequestPayload
             .IsValid(oauthTokenExchangePayload, _oauthTokenExchangeConfigurationConfiguration);
 
-        if(!Valid)
+        if (!Valid)
         {
             return UnauthorizedValidationParametersFailed(oauthTokenExchangePayload, Reason, Error);
         }
 
         // get well known endpoints and validate access token sent in the assertion
         var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
-            _oauthTokenExchangeConfigurationConfiguration.AccessTokenMetadataAddress, 
+            _oauthTokenExchangeConfigurationConfiguration.AccessTokenMetadataAddress,
             new OpenIdConnectConfigurationRetriever());
 
-        var wellKnownEndpoints =  await configurationManager.GetConfigurationAsync();
+        var wellKnownEndpoints = await configurationManager.GetConfigurationAsync();
 
         var accessTokenValidationResult = ValidateOauthTokenExchangeRequestPayload.ValidateTokenAndSignature(
             oauthTokenExchangePayload.subject_token,
             _oauthTokenExchangeConfigurationConfiguration,
             wellKnownEndpoints.SigningKeys);
-        
-        if(!accessTokenValidationResult.Valid)
+
+        if (!accessTokenValidationResult.Valid)
         {
             return UnauthorizedValidationTokenAndSignatureFailed(oauthTokenExchangePayload, accessTokenValidationResult);
         }
@@ -76,7 +76,7 @@ public class AuthorizationTokenExchangeController : Controller
 
         var name = ValidateOauthTokenExchangeRequestPayload.GetPreferredUserName(claimsPrincipal);
         var isNameAndEmail = ValidateOauthTokenExchangeRequestPayload.IsEmailValid(name);
-        if(!isNameAndEmail)
+        if (!isNameAndEmail)
         {
             return UnauthorizedValidationPrefferedUserNameFailed();
         }
@@ -106,7 +106,7 @@ public class AuthorizationTokenExchangeController : Controller
 
         _logger.LogInformation("OBO new access token returned sub {sub}", tokenData.Sub);
 
-        if(IdentityModelEventSource.ShowPII)
+        if (IdentityModelEventSource.ShowPII)
         {
             _logger.LogDebug("OBO new access token returned for sub {sub} for user {Username}", tokenData.Sub,
                 ValidateOauthTokenExchangeRequestPayload.GetPreferredUserName(claimsPrincipal));
@@ -205,7 +205,7 @@ public class AuthorizationTokenExchangeController : Controller
         return Unauthorized(errorResult);
     }
 
-    private IActionResult UnauthorizedValidationParametersFailed(OauthTokenExchangePayload oauthTokenExchangePayload, 
+    private IActionResult UnauthorizedValidationParametersFailed(OauthTokenExchangePayload oauthTokenExchangePayload,
         string Reason, string error)
     {
         var errorResult = new OauthTokenExchangeErrorResponse

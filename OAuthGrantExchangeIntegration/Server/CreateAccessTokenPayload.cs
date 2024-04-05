@@ -19,19 +19,19 @@ public static class CreateDelegatedAccessTokenPayload
         //}
 
         var subject = new ClaimsIdentity(new[] {
-                new Claim("sub", payload.Sub),              
+                new Claim("sub", payload.Sub),
                 new Claim("scope", payload.Scope),
                 // https://datatracker.ietf.org/doc/html/rfc8693#name-act-actor-claim
                 new Claim("act", $"{{ \"sub\": \"{payload.OriginalClientId}\" }}", JsonClaimValueTypes.Json )
             });
 
-        if(payload.ClaimsPrincipal != null)
+        if (payload.ClaimsPrincipal != null)
         {
             var name = ValidateOauthTokenExchangeRequestPayload.GetPreferredUserName(payload.ClaimsPrincipal);
             var azp = ValidateOauthTokenExchangeRequestPayload.GetAzp(payload.ClaimsPrincipal);
             var azpacr = ValidateOauthTokenExchangeRequestPayload.GetAzpacr(payload.ClaimsPrincipal);
 
-            if(!string.IsNullOrEmpty(name)) subject.AddClaim(new Claim("name", name));
+            if (!string.IsNullOrEmpty(name)) subject.AddClaim(new Claim("name", name));
 
             if (!string.IsNullOrEmpty(azp)) subject.AddClaim(new Claim("azp", azp));
 
@@ -40,7 +40,7 @@ public static class CreateDelegatedAccessTokenPayload
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var tokenDescriptor = new SecurityTokenDescriptor
-        {       
+        {
             Subject = subject,
             Expires = DateTime.UtcNow.AddHours(1),
             IssuedAt = DateTime.UtcNow,

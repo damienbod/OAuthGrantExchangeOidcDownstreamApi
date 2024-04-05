@@ -15,8 +15,8 @@ public class AzureMyApiService
     private readonly ITokenAcquisition _tokenAcquisition;
     private readonly IConfiguration _configuration;
 
-    public AzureMyApiService(IHttpClientFactory clientFactory, 
-        ITokenAcquisition tokenAcquisition, 
+    public AzureMyApiService(IHttpClientFactory clientFactory,
+        ITokenAcquisition tokenAcquisition,
         IConfiguration configuration)
     {
         _clientFactory = clientFactory;
