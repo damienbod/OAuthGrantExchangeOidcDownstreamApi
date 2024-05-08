@@ -59,7 +59,7 @@ public static class ValidateOauthTokenExchangeRequestPayload
 
             var tokenValidator = new JsonWebTokenHandler
             {
-                //MapInboundClaims = false
+                MapInboundClaims = true
             };
 
             var tokenValidationResult = await tokenValidator.ValidateTokenAsync(jwtToken, validationParameters);
