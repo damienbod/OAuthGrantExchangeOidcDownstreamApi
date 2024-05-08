@@ -8,9 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.3" />
-    <PackageReference Include="OpenIddict.Validation.AspNetCore" Version="5.4.0" />
-    <PackageReference Include="OpenIddict.Validation.SystemNetHttp" Version="5.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
+    <PackageReference Include="OpenIddict.Validation.AspNetCore" Version="5.5.0" />
+    <PackageReference Include="OpenIddict.Validation.SystemNetHttp" Version="5.5.0" />
     <PackageReference Include="Serilog" Version="3.1.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="8.0.0" />
