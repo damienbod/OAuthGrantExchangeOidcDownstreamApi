@@ -25,11 +25,11 @@ public static class CreateDelegatedAccessTokenPayload
                 new Claim("act", $"{{ \"sub\": \"{payload.OriginalClientId}\" }}", JsonClaimValueTypes.Json )
             });
 
-        if (payload.ClaimsPrincipal != null)
+        if (payload.ClaimsIdentity != null)
         {
-            var name = ValidateOauthTokenExchangeRequestPayload.GetPreferredUserName(payload.ClaimsPrincipal);
-            var azp = ValidateOauthTokenExchangeRequestPayload.GetAzp(payload.ClaimsPrincipal);
-            var azpacr = ValidateOauthTokenExchangeRequestPayload.GetAzpacr(payload.ClaimsPrincipal);
+            var name = ValidateOauthTokenExchangeRequestPayload.GetPreferredUserName(payload.ClaimsIdentity);
+            var azp = ValidateOauthTokenExchangeRequestPayload.GetAzp(payload.ClaimsIdentity);
+            var azpacr = ValidateOauthTokenExchangeRequestPayload.GetAzpacr(payload.ClaimsIdentity);
 
             if (!string.IsNullOrEmpty(name)) subject.AddClaim(new Claim("name", name));
 

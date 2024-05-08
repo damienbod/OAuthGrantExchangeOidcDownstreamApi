@@ -1,5 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
+﻿using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
 using System.Net.Mail;
 using System.Security.Claims;
 
@@ -36,7 +36,7 @@ public static class ValidateOauthTokenExchangeRequestPayload
         return (true, string.Empty, string.Empty);
     }
 
-    public static (bool Valid, string Reason, ClaimsPrincipal? ClaimsPrincipal) ValidateTokenAndSignature(
+    public async static Task<(bool Valid, string Reason, ClaimsIdentity? ClaimsIdentity)> ValidateTokenAndSignature(
         string jwtToken,
         OauthTokenExchangeConfiguration oboConfiguration,
         ICollection<SecurityKey> signingKeys)
@@ -57,11 +57,14 @@ public static class ValidateOauthTokenExchangeRequestPayload
                 ValidAudience = oboConfiguration.AccessTokenAudience
             };
 
-            ISecurityTokenValidator tokenValidator = new JwtSecurityTokenHandler();
+            var tokenValidator = new JsonWebTokenHandler
+            {
+                //MapInboundClaims = false
+            };
 
-            var claimsPrincipal = tokenValidator.ValidateToken(jwtToken, validationParameters, out var _);
+            var tokenValidationResult = await tokenValidator.ValidateTokenAsync(jwtToken, validationParameters);
 
-            return (true, string.Empty, claimsPrincipal);
+            return (true, string.Empty, tokenValidationResult.ClaimsIdentity);
         }
         catch (Exception ex)
         {
@@ -69,20 +72,20 @@ public static class ValidateOauthTokenExchangeRequestPayload
         }
     }
 
-    public static bool IsDelegatedAadAccessToken(ClaimsPrincipal claimsPrincipal)
+    public static bool IsDelegatedAadAccessToken(ClaimsIdentity claimsIdentity)
     {
         // oid if magic MS namespaces not user
-        var oid = claimsPrincipal.Claims.FirstOrDefault(t => t.Type == "http://schemas.microsoft.com/identity/claims/objectidentifier");
+        var oid = claimsIdentity.Claims.FirstOrDefault(t => t.Type == "http://schemas.microsoft.com/identity/claims/objectidentifier");
         // scp if magic MS namespaces not added
-        var scp = claimsPrincipal.Claims.FirstOrDefault(t => t.Type == "http://schemas.microsoft.com/identity/claims/scope");
+        var scp = claimsIdentity.Claims.FirstOrDefault(t => t.Type == "http://schemas.microsoft.com/identity/claims/scope");
 
         if (oid != null && scp != null)
         {
             return true;
         }
 
-        oid = claimsPrincipal.Claims.FirstOrDefault(t => t.Type == "oid");
-        scp = claimsPrincipal.Claims.FirstOrDefault(t => t.Type == "scp");
+        oid = claimsIdentity.Claims.FirstOrDefault(t => t.Type == "oid");
+        scp = claimsIdentity.Claims.FirstOrDefault(t => t.Type == "scp");
         if (oid != null && scp != null)
         {
             return true;
@@ -91,21 +94,21 @@ public static class ValidateOauthTokenExchangeRequestPayload
         return false;
     }
 
-    public static string GetPreferredUserName(ClaimsPrincipal claimsPrincipal)
+    public static string GetPreferredUserName(ClaimsIdentity claimsIdentity)
     {
-        var preferred_username = claimsPrincipal.Claims.FirstOrDefault(t => t.Type == "preferred_username");
+        var preferred_username = claimsIdentity.Claims.FirstOrDefault(t => t.Type == "preferred_username");
         return preferred_username?.Value ?? string.Empty;
     }
 
-    public static string GetAzpacr(ClaimsPrincipal claimsPrincipal)
+    public static string GetAzpacr(ClaimsIdentity claimsIdentity)
     {
-        var azpacrClaim = claimsPrincipal.Claims.FirstOrDefault(t => t.Type == "azpacr");
+        var azpacrClaim = claimsIdentity.Claims.FirstOrDefault(t => t.Type == "azpacr");
         return azpacrClaim?.Value ?? string.Empty;
     }
 
-    public static string GetAzp(ClaimsPrincipal claimsPrincipal)
+    public static string GetAzp(ClaimsIdentity claimsIdentity)
     {
-        var azpClaim = claimsPrincipal.Claims.FirstOrDefault(t => t.Type == "azp");
+        var azpClaim = claimsIdentity.Claims.FirstOrDefault(t => t.Type == "azp");
         return azpClaim?.Value ?? string.Empty;
     }
 

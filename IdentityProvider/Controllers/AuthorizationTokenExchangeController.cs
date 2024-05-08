@@ -54,7 +54,7 @@ public class AuthorizationTokenExchangeController : Controller
 
         var wellKnownEndpoints = await configurationManager.GetConfigurationAsync();
 
-        var accessTokenValidationResult = ValidateOauthTokenExchangeRequestPayload.ValidateTokenAndSignature(
+        var accessTokenValidationResult = await ValidateOauthTokenExchangeRequestPayload.ValidateTokenAndSignature(
             oauthTokenExchangePayload.subject_token,
             _oauthTokenExchangeConfigurationConfiguration,
             wellKnownEndpoints.SigningKeys);
@@ -65,16 +65,16 @@ public class AuthorizationTokenExchangeController : Controller
         }
 
         // get claims from Microsoft Entra ID token and re use in OpenIddict token
-        var claimsPrincipal = accessTokenValidationResult.ClaimsPrincipal;
+        var claimsIdentity = accessTokenValidationResult.ClaimsIdentity;
 
-        var isDelegatedToken = ValidateOauthTokenExchangeRequestPayload.IsDelegatedAadAccessToken(claimsPrincipal);
+        var isDelegatedToken = ValidateOauthTokenExchangeRequestPayload.IsDelegatedAadAccessToken(claimsIdentity);
 
         if (!isDelegatedToken)
         {
             return UnauthorizedValidationRequireDelegatedTokenFailed();
         }
 
-        var name = ValidateOauthTokenExchangeRequestPayload.GetPreferredUserName(claimsPrincipal);
+        var name = ValidateOauthTokenExchangeRequestPayload.GetPreferredUserName(claimsIdentity);
         var isNameAndEmail = ValidateOauthTokenExchangeRequestPayload.IsEmailValid(name);
         if (!isNameAndEmail)
         {
@@ -94,7 +94,7 @@ public class AuthorizationTokenExchangeController : Controller
         var tokenData = new CreateDelegatedAccessTokenPayloadModel
         {
             Sub = Guid.NewGuid().ToString(),
-            ClaimsPrincipal = claimsPrincipal,
+            ClaimsIdentity = claimsIdentity,
             SigningCredentials = ActiveCertificate,
             Scope = _oauthTokenExchangeConfigurationConfiguration.ScopeForNewAccessToken,
             Audience = _oauthTokenExchangeConfigurationConfiguration.AudienceForNewAccessToken,
@@ -109,7 +109,7 @@ public class AuthorizationTokenExchangeController : Controller
         if (IdentityModelEventSource.ShowPII)
         {
             _logger.LogDebug("OBO new access token returned for sub {sub} for user {Username}", tokenData.Sub,
-                ValidateOauthTokenExchangeRequestPayload.GetPreferredUserName(claimsPrincipal));
+                ValidateOauthTokenExchangeRequestPayload.GetPreferredUserName(claimsIdentity));
         }
 
         return Ok(new OauthTokenExchangeSuccessResponse
@@ -180,7 +180,7 @@ public class AuthorizationTokenExchangeController : Controller
         return Unauthorized(errorResult);
     }
 
-    private IActionResult UnauthorizedValidationTokenAndSignatureFailed(OauthTokenExchangePayload oauthTokenExchangePayload, (bool Valid, string Reason, ClaimsPrincipal ClaimsPrincipal) accessTokenValidationResult)
+    private IActionResult UnauthorizedValidationTokenAndSignatureFailed(OauthTokenExchangePayload oauthTokenExchangePayload, (bool Valid, string Reason, ClaimsIdentity ClaimsIdentity) accessTokenValidationResult)
     {
         var errorResult = new OauthTokenExchangeErrorResponse
         {
