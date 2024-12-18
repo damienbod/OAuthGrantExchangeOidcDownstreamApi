@@ -12,6 +12,7 @@
 
 ## History
 
+- 2024-12-18 Updated packages, .NET 9, OpenIddict 6.0
 - 2024-11-01 Updated packages
 - 2024-10-07 Updated packages
 - 2024-05-08 Updated packages, switched JWT token validation to Jwt Web
