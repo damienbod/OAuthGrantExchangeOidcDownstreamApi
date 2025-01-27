@@ -18,19 +18,19 @@ public class AuthorizationTokenExchangeController : Controller
 {
     private readonly IWebHostEnvironment _environment;
     private readonly IConfiguration _configuration;
-    private readonly OauthTokenExchangeConfiguration _oauthTokenExchangeConfigurationConfiguration;
+    private readonly OauthTokenExchangeConfiguration _oauthTokenExchangeConfiguration;
     private readonly ILogger<AuthorizationTokenExchangeController> _logger;
     private readonly UserManager<ApplicationUser> _userManager;
 
     public AuthorizationTokenExchangeController(IConfiguration configuration,
         IWebHostEnvironment env,
-        IOptions<OauthTokenExchangeConfiguration> oauthTokenExchangeConfigurationConfiguration,
+        IOptions<OauthTokenExchangeConfiguration> oauthTokenExchangeConfiguration,
         UserManager<ApplicationUser> userManager,
         ILoggerFactory loggerFactory)
     {
         _configuration = configuration;
         _environment = env;
-        _oauthTokenExchangeConfigurationConfiguration = oauthTokenExchangeConfigurationConfiguration.Value;
+        _oauthTokenExchangeConfiguration = oauthTokenExchangeConfiguration.Value;
         _userManager = userManager;
         _logger = loggerFactory.CreateLogger<AuthorizationTokenExchangeController>();
     }
@@ -40,7 +40,7 @@ public class AuthorizationTokenExchangeController : Controller
     public async Task<IActionResult> Exchange([FromForm] OauthTokenExchangePayload oauthTokenExchangePayload)
     {
         var (Valid, Reason, Error) = ValidateOauthTokenExchangeRequestPayload
-            .IsValid(oauthTokenExchangePayload, _oauthTokenExchangeConfigurationConfiguration);
+            .IsValid(oauthTokenExchangePayload, _oauthTokenExchangeConfiguration);
 
         if (!Valid)
         {
@@ -49,14 +49,14 @@ public class AuthorizationTokenExchangeController : Controller
 
         // get well known endpoints and validate access token sent in the assertion
         var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
-            _oauthTokenExchangeConfigurationConfiguration.AccessTokenMetadataAddress,
+            _oauthTokenExchangeConfiguration.AccessTokenMetadataAddress,
             new OpenIdConnectConfigurationRetriever());
 
         var wellKnownEndpoints = await configurationManager.GetConfigurationAsync();
 
         var accessTokenValidationResult = await ValidateOauthTokenExchangeRequestPayload.ValidateTokenAndSignature(
             oauthTokenExchangePayload.subject_token,
-            _oauthTokenExchangeConfigurationConfiguration,
+            _oauthTokenExchangeConfiguration,
             wellKnownEndpoints.SigningKeys);
 
         if (!accessTokenValidationResult.Valid)
@@ -96,10 +96,10 @@ public class AuthorizationTokenExchangeController : Controller
             Sub = Guid.NewGuid().ToString(),
             ClaimsIdentity = claimsIdentity,
             SigningCredentials = ActiveCertificate,
-            Scope = _oauthTokenExchangeConfigurationConfiguration.ScopeForNewAccessToken,
-            Audience = _oauthTokenExchangeConfigurationConfiguration.AudienceForNewAccessToken,
-            Issuer = _oauthTokenExchangeConfigurationConfiguration.IssuerForNewAccessToken,
-            OriginalClientId = _oauthTokenExchangeConfigurationConfiguration.AccessTokenAudience
+            Scope = _oauthTokenExchangeConfiguration.ScopeForNewAccessToken,
+            Audience = _oauthTokenExchangeConfiguration.AudienceForNewAccessToken,
+            Issuer = _oauthTokenExchangeConfiguration.IssuerForNewAccessToken,
+            OriginalClientId = _oauthTokenExchangeConfiguration.AccessTokenAudience
         };
 
         var accessToken = CreateDelegatedAccessTokenPayload.GenerateJwtTokenAsync(tokenData);
