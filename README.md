@@ -12,6 +12,7 @@
 
 ## History
 
+- 2025-01-27 Updates and code clean up
 - 2024-12-31 Bootstrap 5
 - 2024-12-31 Fix script loading
 - 2024-12-18 Updated packages, .NET 9, OpenIddict 6.0
