@@ -104,11 +104,11 @@ public class AuthorizationTokenExchangeController : Controller
 
         var accessToken = CreateDelegatedAccessTokenPayload.GenerateJwtTokenAsync(tokenData);
 
-        _logger.LogInformation("OBO new access token returned sub {sub}", tokenData.Sub);
+        _logger.LogInformation("OAuth token exchange new access token returned sub {sub}", tokenData.Sub);
 
         if (IdentityModelEventSource.ShowPII)
         {
-            _logger.LogDebug("OBO new access token returned for sub {sub} for user {Username}", tokenData.Sub,
+            _logger.LogDebug("OAuth token exchange new access token returned for sub {sub} for user {Username}", tokenData.Sub,
                 ValidateOauthTokenExchangeRequestPayload.GetPreferredUserName(claimsIdentity));
         }
 
@@ -193,7 +193,7 @@ public class AuthorizationTokenExchangeController : Controller
 
         if (IdentityModelEventSource.ShowPII)
         {
-            _logger.LogDebug("OBO new access token returned for assertion {assertion}", oauthTokenExchangePayload.subject_token);
+            _logger.LogDebug("OAuth token exchange new access token returned for assertion {assertion}", oauthTokenExchangePayload.subject_token);
         }
 
         _logger.LogInformation("{error} {error_description} {correlation_id} {trace_id}",
@@ -225,7 +225,7 @@ public class AuthorizationTokenExchangeController : Controller
 
         if (IdentityModelEventSource.ShowPII)
         {
-            _logger.LogDebug("OBO new access token returned for assertion {assertion}", oauthTokenExchangePayload.subject_token);
+            _logger.LogDebug("OAuth token exchange new access token returned for assertion {assertion}", oauthTokenExchangePayload.subject_token);
         }
 
         return Unauthorized(errorResult);
