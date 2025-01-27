@@ -78,7 +78,7 @@ public class AuthorizationTokenExchangeController : Controller
         var isNameAndEmail = ValidateOauthTokenExchangeRequestPayload.IsEmailValid(name);
         if (!isNameAndEmail)
         {
-            return UnauthorizedValidationPrefferedUserNameFailed();
+            return UnauthorizedValidationPreferredUserNameFailed();
         }
 
         // validate user exists
@@ -160,7 +160,7 @@ public class AuthorizationTokenExchangeController : Controller
         return Unauthorized(errorResult);
     }
 
-    private IActionResult UnauthorizedValidationPrefferedUserNameFailed()
+    private IActionResult UnauthorizedValidationPreferredUserNameFailed()
     {
         var errorResult = new OauthTokenExchangeErrorResponse
         {

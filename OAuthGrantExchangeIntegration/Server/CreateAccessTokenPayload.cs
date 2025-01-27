@@ -18,12 +18,12 @@ public static class CreateDelegatedAccessTokenPayload
         //  "typ": "at+jwt",
         //}
 
-        var subject = new ClaimsIdentity(new[] {
+        var subject = new ClaimsIdentity([
                 new Claim("sub", payload.Sub),
                 new Claim("scope", payload.Scope),
                 // https://datatracker.ietf.org/doc/html/rfc8693#name-act-actor-claim
                 new Claim("act", $"{{ \"sub\": \"{payload.OriginalClientId}\" }}", JsonClaimValueTypes.Json )
-            });
+            ]);
 
         if (payload.ClaimsIdentity != null)
         {
