@@ -10,7 +10,7 @@ using Microsoft.Identity.Web.UI;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddTransient<AzureMyApiService>();
+builder.Services.AddTransient<EntraIdApiService>();
 builder.Services.AddHttpClient();
 
 builder.Services.AddOptions();

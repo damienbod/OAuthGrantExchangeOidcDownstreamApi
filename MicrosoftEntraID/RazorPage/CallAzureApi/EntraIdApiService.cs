@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace EntraIdRazorPage;
 
-public class AzureMyApiService
+public class EntraIdApiService
 {
     private readonly IHttpClientFactory _clientFactory;
     private readonly ITokenAcquisition _tokenAcquisition;
     private readonly IConfiguration _configuration;
 
-    public AzureMyApiService(IHttpClientFactory clientFactory,
+    public EntraIdApiService(IHttpClientFactory clientFactory,
         ITokenAcquisition tokenAcquisition,
         IConfiguration configuration)
     {

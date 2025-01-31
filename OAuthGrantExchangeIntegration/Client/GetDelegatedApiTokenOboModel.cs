@@ -5,7 +5,7 @@ public class GetDelegatedApiTokenOAuthTokenExchangeModel
     public HttpClient? GrantExchangeHttpClient { get; set; }
 
     /// <summary>
-    /// This is the client_id in Azure
+    /// This is the client_id in Entra ID
     /// </summary>
     public string Audience { get; set; } = string.Empty;
     public string Scope { get; set; } = string.Empty;
