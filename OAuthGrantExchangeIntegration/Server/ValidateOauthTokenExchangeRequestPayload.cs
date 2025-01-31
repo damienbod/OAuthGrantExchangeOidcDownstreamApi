@@ -23,7 +23,7 @@ public static class ValidateOauthTokenExchangeRequestPayload
 
         if (!oauthTokenExchangePayload.audience!.Equals(oauthTokenExchangeConfiguration.Audience))
         {
-            return (false, "obo client_id parameter has an incorrect value",
+            return (false, "OAuth token exchange client_id parameter has an incorrect value",
                 OAuthGrantExchangeConsts.ERROR_INVALID_CLIENT);
         };
 
@@ -38,7 +38,7 @@ public static class ValidateOauthTokenExchangeRequestPayload
 
     public async static Task<(bool Valid, string Reason, ClaimsIdentity? ClaimsIdentity)> ValidateTokenAndSignature(
         string jwtToken,
-        OauthTokenExchangeConfiguration oboConfiguration,
+        OauthTokenExchangeConfiguration oauthTokenExchangeConfiguration,
         ICollection<SecurityKey> signingKeys)
     {
         try
@@ -52,9 +52,9 @@ public static class ValidateOauthTokenExchangeRequestPayload
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKeys = signingKeys,
                 ValidateIssuer = true,
-                ValidIssuer = oboConfiguration.AccessTokenAuthority,
+                ValidIssuer = oauthTokenExchangeConfiguration.AccessTokenAuthority,
                 ValidateAudience = true,
-                ValidAudience = oboConfiguration.AccessTokenAudience
+                ValidAudience = oauthTokenExchangeConfiguration.AccessTokenAudience
             };
 
             var tokenValidator = new JsonWebTokenHandler
