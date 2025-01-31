@@ -82,6 +82,7 @@ public class AuthorizationTokenExchangeController : Controller
         }
 
         // validate user exists
+        // Note the email can change and the OID should be used for this check.
         var user = await _userManager.FindByNameAsync(name);
         if (user == null)
         {
