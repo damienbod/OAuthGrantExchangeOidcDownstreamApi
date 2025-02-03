@@ -66,9 +66,8 @@ public class KeyVaultCertificateService
 
         var privateKeyBytes = Convert.FromBase64String(secret.Value);
 
-        var certificateWithPrivateKey = new X509Certificate2(privateKeyBytes,
-            (string)null,
-            X509KeyStorageFlags.MachineKeySet);
+        var certificateWithPrivateKey = X509CertificateLoader.LoadPkcs12(privateKeyBytes,
+            null, X509KeyStorageFlags.MachineKeySet);
 
         return certificateWithPrivateKey;
     }
