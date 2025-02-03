@@ -1,6 +1,7 @@
 ﻿using Azure.Identity;
 using Azure.Security.KeyVault.Certificates;
 using Azure.Security.KeyVault.Secrets;
+using System;
 using System.Security.Cryptography.X509Certificates;
 
 namespace StsServerIdentity.Services.Certificate;
@@ -43,7 +44,7 @@ public static class CertificateService
         // search for local PFX with password, usually local dev
         if (certs.ActiveCertificate == null)
         {
-            certs.ActiveCertificate = new X509Certificate2(
+            certs.ActiveCertificate = X509CertificateLoader.LoadPkcs12FromFile(
                 certificateConfiguration.DevelopmentCertificatePfx,
                 certificateConfiguration.DevelopmentCertificatePassword);
         }
