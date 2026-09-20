@@ -10,26 +10,26 @@
 
   <ItemGroup>
     <PackageReference Include="Azure.Identity" Version="1.21.0" />
-    <PackageReference Include="Azure.Security.KeyVault.Certificates" Version="4.9.0" />
-    <PackageReference Include="Azure.Security.KeyVault.Secrets" Version="4.11.0" />
+    <PackageReference Include="Azure.Security.KeyVault.Certificates" Version="4.9.1" />
+    <PackageReference Include="Azure.Security.KeyVault.Secrets" Version="4.11.1" />
     <PackageReference Include="Fido2" Version="3.0.1" />
     <PackageReference Include="idunno.Authentication.Basic" Version="2.4.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="10.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" PrivateAssets="All" Version="10.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="10.0.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" PrivateAssets="All" Version="10.0.12" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.2" />
-    <PackageReference Include="OpenIddict.AspNetCore" Version="7.5.0" />
-    <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="7.5.0" />
-    <PackageReference Include="OpenIddict.Quartz" Version="7.5.0" />
-    <PackageReference Include="Quartz.Extensions.Hosting" Version="3.18.1" />
+    <PackageReference Include="OpenIddict.AspNetCore" Version="7.7.1" />
+    <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="7.7.1" />
+    <PackageReference Include="OpenIddict.Quartz" Version="7.7.1" />
+    <PackageReference Include="Quartz.Extensions.Hosting" Version="4.1.1" />
 
     <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
     <PackageReference Include="Serilog.Sinks.Seq" Version="9.1.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
   </ItemGroup>
 
   <ItemGroup>
